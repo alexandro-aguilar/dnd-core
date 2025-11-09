@@ -1,0 +1,18 @@
+*.js
+!jest.config.js
+*.d.ts
+node_modules
+.dist/
+volume/
+!commitlint.config.js
+
+.env
+
+# Terraform artifacts
+.terraform/
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfvars
+terraform/environments/local.tfvars
+
+terraform/environments/local.template/

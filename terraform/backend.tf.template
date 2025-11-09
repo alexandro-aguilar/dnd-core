@@ -1,0 +1,28 @@
+# Backend Configuration Templates
+# 
+# Uncomment and configure one of the following backend configurations
+# for production use. Local development can use local state.
+
+# Option 1: S3 Backend (Recommended for AWS)
+# terraform {
+#   backend "s3" {
+#     bucket         = "your-terraform-state-bucket"
+#     key            = "dnd/terraform.tfstate"
+#     region         = "us-east-1"
+#     dynamodb_table = "terraform-locks"
+#     encrypt        = true
+#   }
+# }
+
+# Option 2: Terraform Cloud
+# terraform {
+#   backend "remote" {
+#     organization = "your-organization"
+#     workspaces {
+#       name = "dnd-infrastructure"
+#     }
+#   }
+# }
+
+# For local development, no backend configuration is needed
+# State will be stored locally in terraform.tfstate

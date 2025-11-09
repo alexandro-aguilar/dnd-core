@@ -1,0 +1,40 @@
+# Example Terraform Variables File
+# Copy this file to create environment-specific configurations
+# 
+# For LocalStack: cp terraform.tfvars.example local.tfvars
+# For AWS Dev:    cp terraform.tfvars.example dev.tfvars
+# For AWS Prod:   cp terraform.tfvars.example prod.tfvars
+
+# REQUIRED: Project configuration
+project_name = "dnd"                # Must be 1-20 chars, lowercase, numbers, hyphens only
+environment  = "local"              # Must be one of: local, dev, staging, prod
+
+# REQUIRED: AWS configuration
+aws_region     = "us-east-1"        # AWS region for deployment
+use_localstack = true               # Set to false for real AWS deployment
+
+# Optional: Infrastructure settings
+log_retention_in_days = 7           # CloudWatch log retention
+create_apigateway     = true        # Set to false to deploy Lambda functions only
+
+# REQUIRED: Lambda function configurations
+lambda_functions = {
+  example = {
+    source_file = "../.dist/app/modules/example/interface/handlers/exampleHandler.js"
+    handler     = "exampleHandler.handler"
+    runtime     = "nodejs22.x"
+    description = "Example Lambda function"
+    memory_size = 128
+    timeout     = 10
+    environment = {
+      NODE_ENV  = "local"
+      LOG_LEVEL = "debug"
+    }
+    routes = [
+      {
+        method = "GET"
+        path   = "/example"
+      }
+    ]
+  }
+}
