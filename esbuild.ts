@@ -16,13 +16,19 @@ async function main() {
     process.exit(0);
   }
 
+  // Convert entryPoints array to object mapping for custom output names
+  const entryPointsMap = entryPoints.reduce((acc, file) => {
+    const handlerName = file.split('/').pop()?.replace('.ts', '') || 'handler';
+    acc[handlerName] = file;
+    return acc;
+  }, {} as Record<string, string>);
+
   const buildOptions = {
-    entryPoints,
+    entryPoints: entryPointsMap,
     bundle: true,
     platform: 'node' as const,
     target: 'node22',
-    outbase: 'app',
-    outdir: '.dist/app',
+    outdir: './.dist',
     minify: false,
     sourcemap: isWatchMode,
     logLevel: 'info' as LogLevel,
