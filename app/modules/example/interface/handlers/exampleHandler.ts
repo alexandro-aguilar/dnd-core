@@ -18,7 +18,7 @@ export const handler = middy(
     return {
       statusCode: 200,
       body: JSON.stringify({
-        message: 'hola tonoto'
+        message: 'hola',
       }),
       headers: {
         'Content-Type': 'application/json',
