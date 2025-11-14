@@ -1,117 +1,57 @@
-# Terraform Infrastructure - Modular Architecture
+# Terraform Architecture Guide
 
-This Terraform configuration uses a highly scalable, modular architecture designed for enterprise-level applications. The infrastructure supports multiple environments and follows best practices for maintainability and reusability.
+This document complements `terraform/README.md` by focusing solely on the design of the Terraform stack—how the modules fit together, how environments are isolated, and the patterns you can extend as the platform grows.
 
-## 🏗️ Architecture Overview
+## Design Goals
 
-### File Structure
-```
-terraform/
-├── main.tf              # Main entry point and module orchestration
-├── versions.tf          # Terraform and provider version constraints
-├── providers.tf         # AWS provider configuration
-├── variables.tf         # Input variable definitions
-├── locals.tf           # Local values and computed configurations
-├── outputs.tf          # Output values
-├── iam.tf              # IAM roles and policies
-├── lambda.tf           # Lambda resources (can be replaced by modules)
-├── apigateway.tf       # API Gateway resources (can be replaced by modules)
-├── environments/       # Environment-specific configurations
-│   ├── local.tfvars    # Local development with LocalStack
-│   ├── dev.tfvars      # Development environment
-│   └── prod.tfvars     # Production environment
-└── modules/            # Reusable Terraform modules
-    ├── lambda/         # Lambda function module
-    │   ├── main.tf
-    │   ├── variables.tf
-    │   └── outputs.tf
-    └── apigateway/     # API Gateway module
-        ├── main.tf
-        ├── variables.tf
-        └── outputs.tf
-```
+1. **Composable modules** – Lambda and API Gateway can be deployed together or independently.
+2. **Environment isolation** – Each environment receives its own backend state file and tfvars configuration.
+3. **Operational consistency** – Identical workflows are available locally (LocalStack) and in AWS accounts.
+4. **Gradual adoption** – Inline resources (`iam.tf`, `lambda.tf`, `apigateway.tf`) can coexist with modules while migrating legacy stacks.
 
-## 🚀 Features
+## Module Responsibilities
 
-### 1. Modular Design
-- **Separation of Concerns**: Each service (Lambda, API Gateway, IAM) is isolated
-- **Reusable Modules**: Common patterns can be shared across projects
-- **Environment Isolation**: Different configurations for local, dev, and prod
+### Lambda (`modules/lambda`)
+- Creates Lambda functions, IAM execution roles (if desired), and CloudWatch Log Groups with retention settings.
+- Accepts a map of function definitions containing code files, handler names, runtime, memory/timeout, and environment variables.
+- Returns maps of function objects, ARNs, invoke ARNs, and function names for downstream consumers.
 
-### 2. Scalability
-- **Multi-Environment Support**: Easy deployment to different environments
-- **Dynamic Configuration**: Lambda functions and routes defined declaratively
-- **Flexible Resource Management**: Easy to add/remove services
+### API Gateway (`modules/apigateway`)
+- Provisions an HTTP API, stages, routes, integrations, and permissions for the Lambda functions you pass in.
+- Allows toggling API Gateway creation via `create_apigateway` to support Lambda-only deployments.
+- Outputs API identifiers plus the invoke URL for use in application code or automation.
 
-### 3. Best Practices
-- **Consistent Tagging**: All resources tagged with project and environment
-- **Proper Dependencies**: Resources depend on prerequisites
-- **Security**: IAM roles with least privilege
-- **Monitoring**: CloudWatch logs with configurable retention
+> The README lists high-level module locations; this section contains the deeper contract and therefore lives here without duplication elsewhere.
 
-## 📋 Usage
+## Environment Strategy
 
-### Quick Start
-```bash
-# Initialize Terraform
-terraform init
+- `environments/local.tfvars`, `dev.tfvars`, and `prod.tfvars` each describe the Lambda functions and API routes for that specific environment.
+- Backends are configured separately (if using S3/DynamoDB) so state does not leak between environments.
+- Locals (`locals.tf`) centralize naming, tagging, and feature flags such as `use_localstack`, ensuring consistent defaults regardless of tfvars content.
 
-# Plan with local environment
-terraform plan -var-file="environments/local.tfvars"
+## Configuration Pattern
 
-# Apply local configuration
-terraform apply -var-file="environments/local.tfvars"
-```
-
-### Environment-Specific Deployment
-```bash
-# Development
-terraform apply -var-file="environments/dev.tfvars"
-
-# Production
-terraform apply -var-file="environments/prod.tfvars"
-```
-
-### Using Workspaces (Recommended)
-```bash
-# Create and switch to environment workspace
-terraform workspace new dev
-terraform workspace select dev
-
-# Deploy to specific environment
-terraform apply -var-file="environments/dev.tfvars"
-```
-
-## 🔧 Configuration
-
-### Lambda Functions
-Define Lambda functions in your `.tfvars` file:
+The snippet below illustrates how to define multiple functions and expose routes that the API Gateway module will wire automatically.
 
 ```hcl
 lambda_functions = {
-  api = {
-    source_file = "../app/dist/api.zip"
+  example = {
+    source_file = "../app/dist/example.zip"
     handler     = "index.handler"
     runtime     = "nodejs18.x"
-    description = "Main API Lambda function"
+    description = "Example Lambda"
     memory_size = 256
-    timeout     = 30
+    timeout     = 20
     environment = {
-      NODE_ENV = "production"
+      NODE_ENV  = "production"
       LOG_LEVEL = "info"
     }
     routes = [
-      {
-        method = "GET"
-        path   = "/users"
-      },
-      {
-        method = "POST"
-        path   = "/users"
-      }
+      { method = "GET",  path = "/examples" },
+      { method = "POST", path = "/examples" }
     ]
   }
-  
+
   auth = {
     source_file = "../app/dist/auth.zip"
     handler     = "index.handler"
@@ -120,110 +60,37 @@ lambda_functions = {
     memory_size = 128
     timeout     = 10
     environment = {
-      JWT_SECRET = "your-secret-key"
+      JWT_SECRET = "replace-me"
     }
     routes = [
-      {
-        method = "POST"
-        path   = "/auth/login"
-      }
+      { method = "POST", path = "/auth/login" }
     ]
   }
 }
 ```
 
-## 📁 Migration from Monolithic Structure
+## Advanced Capabilities
 
-The architecture supports both approaches:
+- **Multi-region deployments** – Leverage provider aliases inside modules to deploy the same stack in multiple AWS regions.
+- **Remote state backends** – Configure `backend.tf` with S3/DynamoDB to share state in teams and enable locking.
+- **Custom modules** – Add directories under `modules/` for cross-cutting concerns such as databases, storage, monitoring, or security appliances and compose them from `main.tf`.
 
-### Option 1: Full Module Usage (Recommended)
-- Use the `modules/` directory for all resources
-- Keep `main.tf` clean and focused on orchestration
-- Move inline resources to dedicated modules
+## Security & Operations
 
-### Option 2: Hybrid Approach (Current)
-- Keep some resources inline (iam.tf, lambda.tf, apigateway.tf)
-- Use modules for complex or reusable components
-- Gradually migrate to full module usage
+- IAM policies follow least-privilege defaults; extend them in `iam.tf` or a dedicated module when new services are introduced.
+- Separate environments prevent accidental cross-talk; no shared resources or state files.
+- Secrets should be injected via AWS Secrets Manager or Parameter Store references rather than plaintext tfvars.
+- CloudWatch logging is enabled with configurable retention and API Gateway logging supports request/response tracing.
 
-### Option 3: Gradual Migration
-1. Start with inline resources (current state)
-2. Extract common patterns into modules
-3. Refactor main.tf to use modules
-4. Clean up inline resource files
+## Roadmap & Enhancements
 
-## 🌟 Advanced Features
+1. **CI/CD** – Automate Terraform plan/apply with GitHub Actions or similar.
+2. **Terratest** – Add infrastructure tests for module contracts.
+3. **Additional modules** – Database, storage, and security modules to complement the Lambda/API surface.
+4. **Documentation tooling** – Generate module documentation via `terraform-docs` to keep inputs/outputs in sync.
 
-### 1. Multi-Region Support
-```hcl
-# In providers.tf
-provider "aws" {
-  alias  = "us_west_2"
-  region = "us-west-2"
-}
+## Contributing Guidelines
 
-# Use in modules
-module "lambda_west" {
-  source = "./modules/lambda"
-  providers = {
-    aws = aws.us_west_2
-  }
-  # ... other configuration
-}
-```
-
-### 2. Backend Configuration
-```hcl
-# backend.tf
-terraform {
-  backend "s3" {
-    bucket         = "your-terraform-state-bucket"
-    key            = "dnd/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "terraform-state-lock"
-    encrypt        = true
-  }
-}
-```
-
-### 3. Custom Modules
-Create application-specific modules:
-```
-modules/
-├── database/       # RDS/DynamoDB module
-├── storage/        # S3 bucket module
-├── monitoring/     # CloudWatch/X-Ray module
-└── security/       # WAF/Shield module
-```
-
-## 🔒 Security Considerations
-
-1. **IAM Roles**: Each service has minimal required permissions
-2. **Environment Isolation**: No shared resources between environments
-3. **Secrets Management**: Use AWS Secrets Manager or Parameter Store
-4. **Network Security**: Consider VPC and security groups for production
-
-## 📊 Monitoring and Logging
-
-- **CloudWatch Logs**: Automatic log groups with configurable retention
-- **API Gateway Logging**: Detailed request/response logging
-- **Lambda Metrics**: Built-in CloudWatch metrics
-- **Tagging Strategy**: Consistent tagging for cost allocation
-
-## 🚀 Future Enhancements
-
-1. **Service Discovery**: Add support for service mesh
-2. **Auto Scaling**: Implement Lambda concurrency controls
-3. **CI/CD Integration**: GitLab/GitHub Actions workflows
-4. **Testing**: Terratest integration for infrastructure testing
-5. **Documentation**: Terraform docs generation
-
-## 🤝 Contributing
-
-1. Follow the established module structure
-2. Add proper variable descriptions and types
-3. Include outputs for important resources
-4. Test with multiple environments
-5. Update documentation
-
-This architecture provides a solid foundation for growth while maintaining simplicity and developer experience.
+- Maintain type-safe variables and meaningful defaults.
+- Expose outputs for every resource another stack might consume.
+- Update both this guide and the README when adding new modules or workflows so operations and architecture remain aligned.

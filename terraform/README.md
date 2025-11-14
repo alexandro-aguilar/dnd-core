@@ -1,163 +1,100 @@
-# DND Terraform - Modular Architecture
+# DND Terraform Infrastructure
 
-This project implements a highly scalable, modular Terraform architecture for AWS Lambda and API Gateway deployment.
+Modular Terraform configuration that provisions AWS Lambda and API Gateway stacks with the same layout for local (LocalStack), dev, and prod environments.
 
-## 🏗️ Architecture Overview
+## Documentation Map
 
-The infrastructure is organized into several layers:
+- `README.md` (this file) → workflow, commands, and day-to-day usage.
+- `ARCHITECTURE.md` → deep dive into the module structure, environment strategy, and advanced patterns.
 
-### File Structure
+## Repository Layout
+
 ```
 terraform/
-├── main.tf              # Main orchestration file
+├── main.tf              # Entry point and module orchestration
 ├── versions.tf          # Terraform and provider versions
 ├── providers.tf         # AWS provider configuration
-├── variables.tf         # Input variables
-├── locals.tf           # Local values and computed data
-├── outputs.tf          # Output values
-├── iam.tf              # IAM roles and policies
-├── lambda.tf           # Lambda functions (inline)
-├── apigateway.tf       # API Gateway resources (inline)
-├── environments/       # Environment-specific configurations
-│   ├── local.tfvars
-│   ├── dev.tfvars
-│   └── prod.tfvars
-└── modules/            # Reusable modules
-    ├── lambda/         # Lambda module
-    │   ├── main.tf
-    │   ├── variables.tf
-    │   └── outputs.tf
-    └── apigateway/     # API Gateway module
-        ├── main.tf
-        ├── variables.tf
-        └── outputs.tf
+├── variables.tf         # Shared inputs
+├── locals.tf            # Derived config and tagging rules
+├── outputs.tf           # Frequently consumed outputs
+├── iam.tf / lambda.tf / apigateway.tf   # Inline resources for hybrid deployments
+├── environments/        # Environment-specific tfvars
+└── modules/             # Reusable Lambda + API Gateway building blocks
 ```
 
-### Design Principles
+See `ARCHITECTURE.md` for a description of the module boundaries and when to use each file.
 
-1. **Modularity**: Components are split into logical, reusable modules
-2. **Environment Separation**: Each environment has its own variable file
-3. **DRY Principle**: Common configurations are centralized in locals
-4. **Scalability**: Easy to add new Lambda functions and routes
-5. **Maintainability**: Clear separation of concerns
+## Prerequisites
 
-## 🚀 Quick Start
+- Terraform ≥ 1.5.0
+- Node.js + Yarn (build Lambda bundles)
+- Docker running LocalStack for local deployments
 
-### Prerequisites
-- Terraform >= 1.5.0
-- Node.js and Yarn
-- Docker (for LocalStack)
+## Workflow
 
-### Commands
+### Build + Deploy helpers
 
-#### Build and Deploy
 ```bash
-# Build Lambda code and deploy to local environment
+# Build Lambda bundle then apply the local stack
 yarn deploy:local
 
-# Deploy to development environment
+# Deploy AWS dev/prod
 yarn deploy:dev
-
-# Deploy to production environment
 yarn deploy:prod
 ```
 
-#### Terraform Operations
+### Terraform commands
+
 ```bash
-# Initialize Terraform
+# Initialize the working directory
 yarn tf:init
 
-# Plan changes for specific environment
+# Plan/apply per environment
 yarn tf:plan:local
 yarn tf:plan:dev
 yarn tf:plan:prod
-
-# Apply changes
 yarn tf:apply:local
 yarn tf:apply:dev
 yarn tf:apply:prod
 
-# Destroy infrastructure
+# Destroy an environment
 yarn teardown:local
 yarn teardown:dev
 yarn teardown:prod
 ```
 
-#### Development Tools
+### Utilities
+
 ```bash
-# Format and validate Terraform
-yarn check:terraform
-
-# View outputs
-yarn tf:output
-
-# List Terraform state
-yarn tf:state:list
+yarn check:terraform   # fmt + validate
+yarn tf:output         # show outputs
+yarn tf:state:list     # list tracked resources
 ```
-
-## 📁 Module Documentation
-
-### Lambda Module
-Located in `modules/lambda/`
-
-**Purpose**: Manages Lambda functions and their CloudWatch log groups.
-
-**Inputs**:
-- `name_prefix`: Resource naming prefix
-- `lambda_configs`: Map of Lambda function configurations
-- `lambda_exec_role_arn`: IAM role ARN for Lambda execution
-- `log_retention_in_days`: CloudWatch log retention period
-- `common_tags`: Tags to apply to all resources
-
-**Outputs**:
-- `lambda_functions`: Map of created Lambda function objects
-- `lambda_function_arns`: Map of Lambda function ARNs
-- `lambda_function_invoke_arns`: Map of Lambda invoke ARNs
-- `lambda_function_names`: Map of Lambda function names
-
-### API Gateway Module
-Located in `modules/apigateway/`
-
-**Purpose**: Manages API Gateway HTTP API, integrations, routes, and permissions.
-
-**Inputs**:
-- `name_prefix`: Resource naming prefix
-- `lambda_functions`: Map of Lambda function objects
-- `api_routes`: Map of API route configurations
-- `create_apigateway`: Boolean to enable/disable API Gateway
-- `log_retention_in_days`: CloudWatch log retention period
-- `common_tags`: Tags to apply to all resources
-
-**Outputs**:
-- `api_gateway_id`: API Gateway ID
-- `api_gateway_arn`: API Gateway ARN
-- `api_gateway_execution_arn`: API Gateway execution ARN
-- `api_gateway_endpoint`: API Gateway invoke URL
-- `stage_invoke_url`: Complete stage URL
-
-## Layout
-
-- `main.tf` & `variables.tf`: Provider, IAM, Lambda, and API Gateway resources.
-- `outputs.tf`: Frequently used values such as the HTTP API endpoint.
-- `terraform.tfvars.example`: Sample configuration that wires two Lambda routes.
 
 ## Usage
 
-1. Copy and edit `terraform.tfvars.example` → `terraform.tfvars`.
-2. (Local only) Start LocalStack: `localstack start` or `SERVICES=lambda,apigateway localstack start`.
-3. Initialise and apply:
+1. Choose the tfvars file for your target environment (see `environments/*.tfvars`) and tailor Lambda definitions, API routes, and tags to your needs.
+2. For local development ensure LocalStack is running: `localstack start` or `SERVICES=lambda,apigateway localstack start`.
+3. Initialise and apply from the repo root (scripts above) or manually:
 
    ```bash
    terraform -chdir=terraform init
    terraform -chdir=terraform apply
    ```
 
-4. Invoke routes via the printed `http_api_endpoint` output.
+4. Invoke HTTP routes using the `http_api_endpoint` output.
 
-## LocalStack tips
+## Modules at a Glance
 
-- Keep `use_localstack = true` (default) for local runs. Set it to `false` when targeting AWS.
-- Ensure LocalStack exposes the services listed in `localstack_endpoints` (lambda, apigateway/apigatewayv2, iam, sts, logs, cloudwatch, s3).
+- `modules/lambda`: Creates Lambda functions, log groups, and exposes ARNs/names for downstream consumers.
+- `modules/apigateway`: Provisions HTTP APIs, stages, integrations, and permissions for the Lambdas you enable.
+
+Inputs/outputs for each module, environment patterns, and future enhancements live in `ARCHITECTURE.md`.
+
+## LocalStack Tips
+
+- Keep `use_localstack = true` for local runs; set `false` when targeting AWS accounts.
+- Ensure LocalStack exposes all services listed under `localstack_endpoints` (lambda, apigateway/apigatewayv2, iam, sts, logs, cloudwatch, s3).
 - LocalStack uses dummy credentials; Terraform injects `test`/`test` automatically.
 
 ## Adding Lambdas
@@ -166,7 +103,7 @@ Extend the `lambda_functions` map with entries that define:
 
 - `source_file`: Relative path to the JavaScript file that exports the handler (e.g., `../app/.bin/health/index.js`). Terraform inlines this file directly, so no manual zipping is needed.
 - `handler`: Runtime entry point (defaults to `index.handler`).
-- `runtime`: AWS Lambda runtime (defaults to `nodejs18.x`).
+- `runtime`: AWS Lambda runtime (defaults to `nodejs20.x`).
 - `routes`: Optional list of `{ method, path }` objects to mount on the shared HTTP API.
 
 Every function automatically receives CloudWatch log groups, IAM execution roles (with the AWS managed basic policy), and API Gateway permissions when routes are defined.
