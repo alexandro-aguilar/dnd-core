@@ -6,9 +6,9 @@ locals {
     description   = null
     memory_size   = 128
     timeout       = 10
-    runtime       = "nodejs18.x"
+    runtime       = "nodejs22.x"
     handler       = "index.handler"
-    architectures = ["x86_64"]
+    architectures = ["arm64"]
     environment   = {}
     layers        = []
     routes        = []

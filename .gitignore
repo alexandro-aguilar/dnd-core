@@ -13,6 +13,5 @@ volume/
 terraform/.terraform/
 terraform/.terraform.lock.hcl
 terraform/terraform.tfvars
-terraform/environments/local.tfvars
-
-terraform/environments/local.template/
+*.tfstate
+*.tfstate.backup

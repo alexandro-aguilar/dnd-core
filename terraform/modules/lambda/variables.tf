@@ -37,3 +37,15 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "use_localstack" {
+  description = "Whether to use LocalStack for local development with hot reload"
+  type        = bool
+  default     = false
+}
+
+variable "hot_reload_bucket" {
+  description = "S3 bucket name for hot reload functionality"
+  type        = string
+  default     = "hot-reload"
+}

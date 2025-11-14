@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "Short name for the application; used as part of resource names."
   type        = string
-  
+
   validation {
     condition     = can(regex("^[a-z0-9-]{1,20}$", var.project_name))
     error_message = "Project name must be 1-20 characters, lowercase letters, numbers, and hyphens only."
@@ -12,7 +12,7 @@ variable "environment" {
   description = "Deployment environment identifier (e.g. local, dev, prod)."
   type        = string
   default     = "local"
-  
+
   validation {
     condition     = contains(["local", "dev", "staging", "prod"], var.environment)
     error_message = "Environment must be one of: local, dev, staging, prod."
@@ -51,7 +51,7 @@ variable "log_retention_in_days" {
   description = "CloudWatch log retention period for Lambda and API Gateway logs."
   type        = number
   default     = 7
-  
+
   validation {
     condition     = contains([1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653], var.log_retention_in_days)
     error_message = "Log retention must be a valid CloudWatch Logs retention period."

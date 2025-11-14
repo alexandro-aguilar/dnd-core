@@ -10,15 +10,13 @@ services:
       - HOST_LAMBDA_DIR=${PWD}
       - DOCKER_HOST=unix:///var/run/docker.sock
       - LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN}
-      - LAMBDA_REMOTE_DOCKER=false
-      - LAMBDA_RUNTIME_ENVIRONMENT_VARIABLES=1
 
     networks:
       - localnet
     volumes:
       - '${LOCALSTACK_VOLUME_DIR:-./volume/localstack}:/var/lib/localstack'
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - './.dist:/var/lib/localstack/.dist'
+      - '${PWD}:/workspace'
 
   postgres:
     container_name: 'postgres_dnd-core_db'
