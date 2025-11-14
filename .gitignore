@@ -13,5 +13,5 @@ volume/
 terraform/.terraform/
 terraform/.terraform.lock.hcl
 terraform/terraform.tfvars
-*.tfstate
-*.tfstate.backup
+terraform/*.tfstate
+terraform/*.tfstate.backup
