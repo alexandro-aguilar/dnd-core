@@ -35,8 +35,8 @@ async function main() {
     plugins: [
       // nodeExternalsPlugin({ packagePath: './package.json' }),
       alias({
-        '@src': resolve(__dirname, 'src'),
-        '@test': resolve(__dirname, 'test'),
+        '@src': resolve(__dirname, 'app/src'),
+        '@tests': resolve(__dirname, 'app/tests'),
         '@root': resolve(__dirname, '.'),
       }),
     ],
