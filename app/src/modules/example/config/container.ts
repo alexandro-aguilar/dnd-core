@@ -10,4 +10,3 @@ export const container = new Container();
 container.bind<ILogger>(types.Logger).to(PowertoolsLoggerAdapter).inSingletonScope();
 container.bind<MetricsService>(types.MetricsService).to(MetricsService);
 container.bind<TracerService>(types.TracerService).to(TracerService);
-
