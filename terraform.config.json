@@ -9,14 +9,14 @@
       "terraform": {
         "tf:init": "Initialize Terraform",
         "tf:plan:*": "Plan infrastructure changes for environment",
-        "tf:apply:*": "Apply infrastructure changes for environment", 
+        "tf:apply:*": "Apply infrastructure changes for environment",
         "tf:destroy:*": "Destroy infrastructure for environment",
         "tf:validate": "Validate Terraform configuration",
         "tf:fmt": "Format Terraform files"
       },
       "deployment": {
         "deploy:local": "Full deployment to LocalStack",
-        "deploy:dev": "Full deployment to development", 
+        "deploy:dev": "Full deployment to development",
         "deploy:prod": "Full deployment to production"
       },
       "utilities": {
@@ -34,14 +34,14 @@
       "logLevel": "debug"
     },
     "dev": {
-      "description": "AWS development environment", 
+      "description": "AWS development environment",
       "provider": "AWS",
       "autoApprove": false,
       "logLevel": "info"
     },
     "prod": {
       "description": "AWS production environment",
-      "provider": "AWS", 
+      "provider": "AWS",
       "autoApprove": false,
       "logLevel": "warn"
     }

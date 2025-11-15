@@ -67,11 +67,11 @@ terraform -chdir=terraform validate
 
 ## Helpful scripts
 
-| Command            | Purpose                                       |
-|--------------------|-----------------------------------------------|
-| `yarn build`       | Compile Lambdas via esbuild.                  |
-| `yarn lint`        | Lint TypeScript/Node sources.                 |
-| `yarn localstack`  | Restart LocalStack using docker-compose.      |
-| `yarn deploy:local`| Build & deploy stack to LocalStack via Terraform. |
+| Command             | Purpose                                           |
+| ------------------- | ------------------------------------------------- |
+| `yarn build`        | Compile Lambdas via esbuild.                      |
+| `yarn lint`         | Lint TypeScript/Node sources.                     |
+| `yarn localstack`   | Restart LocalStack using docker-compose.          |
+| `yarn deploy:local` | Build & deploy stack to LocalStack via Terraform. |
 
 See `package.json` for the full list. When in doubt, check `terraform/README.md` for stack-specific instructions.

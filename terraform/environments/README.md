@@ -26,6 +26,7 @@ environments/
 Each environment directory contains all the configuration needed for that environment:
 
 ### Local Development (LocalStack)
+
 ```bash
 terraform plan \
   -var-file=environments/local/aws-common.tfvars \
@@ -38,6 +39,7 @@ terraform apply \
 ```
 
 ### Development (AWS)
+
 ```bash
 terraform plan \
   -var-file=environments/dev/aws-common.tfvars \
@@ -50,6 +52,7 @@ terraform apply \
 ```
 
 ### Staging (AWS)
+
 ```bash
 terraform plan \
   -var-file=environments/staging/aws-common.tfvars \
@@ -62,6 +65,7 @@ terraform apply \
 ```
 
 ### Production (AWS)
+
 ```bash
 terraform plan \
   -var-file=environments/prod/aws-common.tfvars \
@@ -76,13 +80,17 @@ terraform apply \
 ## 📋 **File Descriptions**
 
 ### `aws-common.tfvars`
+
 Contains AWS-specific settings:
+
 - AWS region
 - LocalStack endpoints (for local environment)
 - Infrastructure settings
 
 ### `environment.tfvars`
+
 Contains environment-specific configurations:
+
 - Project name and environment
 - Log retention settings
 - Lambda function definitions with environment-specific:
@@ -93,13 +101,13 @@ Contains environment-specific configurations:
 
 ## 🔧 **Environment Differences**
 
-| Setting | Local | Dev | Staging | Prod |
-|---------|--------|-----|---------|------|
-| **Memory** | 128 MB | 256 MB | 384 MB | 512 MB |
-| **Timeout** | 10s | 30s | 20s | 15s |
-| **Logs** | 1 day | 7 days | 14 days | 30 days |
-| **LOG_LEVEL** | debug | info | info | warn |
-| **Provider** | LocalStack | AWS | AWS | AWS |
+| Setting       | Local      | Dev    | Staging | Prod    |
+| ------------- | ---------- | ------ | ------- | ------- |
+| **Memory**    | 128 MB     | 256 MB | 384 MB  | 512 MB  |
+| **Timeout**   | 10s        | 30s    | 20s     | 15s     |
+| **Logs**      | 1 day      | 7 days | 14 days | 30 days |
+| **LOG_LEVEL** | debug      | info   | info    | warn    |
+| **Provider**  | LocalStack | AWS    | AWS     | AWS     |
 
 ## ➕ **Adding New Environments**
 

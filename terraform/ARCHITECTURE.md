@@ -12,11 +12,13 @@ This document complements `terraform/README.md` by focusing solely on the design
 ## Module Responsibilities
 
 ### Lambda (`modules/lambda`)
+
 - Creates Lambda functions, IAM execution roles (if desired), and CloudWatch Log Groups with retention settings.
 - Accepts a map of function definitions containing code files, handler names, runtime, memory/timeout, and environment variables.
 - Returns maps of function objects, ARNs, invoke ARNs, and function names for downstream consumers.
 
 ### API Gateway (`modules/apigateway`)
+
 - Provisions an HTTP API, stages, routes, integrations, and permissions for the Lambda functions you pass in.
 - Allows toggling API Gateway creation via `create_apigateway` to support Lambda-only deployments.
 - Outputs API identifiers plus the invoke URL for use in application code or automation.
