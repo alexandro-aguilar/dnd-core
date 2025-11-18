@@ -11,9 +11,7 @@ export const users = citadelAdmin.table(
     name: text('name').notNull(),
     passwordHash: text('password_hash').notNull(),
   },
-  (table) => ({
-    emailIdx: uniqueIndex('users_email_idx').on(table.email),
-  })
+  (table) => [uniqueIndex('users_email_idx').on(table.email)]
 );
 
 export const races = arcaneCodex.table('races', {
@@ -43,6 +41,15 @@ export const classes = arcaneCodex.table('classes', {
   hitDie: text('hit_die').notNull(),
   primaryAbility: text('primary_ability').notNull(),
   spellcastingAbility: text('spellcasting_ability'),
+});
+
+export const subclasses = arcaneCodex.table('subclasses', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  classId: uuid('class_id')
+    .notNull()
+    .references(() => classes.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
 });
 
 export const abilities = arcaneCodex.table('abilities', {
@@ -113,9 +120,9 @@ export const characterClasses = arcaneCodex.table('character_classes', {
   characterId: uuid('character_id')
     .notNull()
     .references(() => characters.id, { onDelete: 'cascade' }),
-  classId: uuid('class_id')
+  subclassId: uuid('subclass_id')
     .notNull()
-    .references(() => classes.id, { onDelete: 'cascade' }),
+    .references(() => subclasses.id, { onDelete: 'cascade' }),
   classLevel: integer('class_level').notNull(),
 });
 
@@ -167,5 +174,7 @@ export const characterSpells = arcaneCodex.table('character_spells', {
     .references(() => spells.id, { onDelete: 'cascade' }),
   known: boolean('known').notNull(),
   prepared: boolean('prepared').notNull(),
-  sourceClassId: uuid('source_class_id').references(() => classes.id),
+  sourceClassId: uuid('source_class_id')
+    .notNull()
+    .references(() => classes.id, { onDelete: 'cascade' }),
 });

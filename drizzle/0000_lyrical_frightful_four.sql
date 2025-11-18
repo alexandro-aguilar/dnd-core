@@ -24,7 +24,7 @@ CREATE TABLE "arcane_codex"."character_ability_scores" (
 CREATE TABLE "arcane_codex"."character_classes" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"character_id" uuid NOT NULL,
-	"class_id" uuid NOT NULL,
+	"subclass_id" uuid NOT NULL,
 	"class_level" integer NOT NULL
 );
 --> statement-breakpoint
@@ -53,7 +53,7 @@ CREATE TABLE "arcane_codex"."character_spells" (
 	"spell_id" uuid NOT NULL,
 	"known" boolean NOT NULL,
 	"prepared" boolean NOT NULL,
-	"source_class_id" uuid
+	"source_class_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "arcane_codex"."characters" (
@@ -120,6 +120,13 @@ CREATE TABLE "arcane_codex"."spells" (
 	"description" text NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "arcane_codex"."subclasses" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"class_id" uuid NOT NULL,
+	"name" text NOT NULL,
+	"description" text NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "arcane_codex"."subraces" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"race_id" uuid NOT NULL,
@@ -136,18 +143,19 @@ CREATE TABLE "citadel_admin"."users" (
 ALTER TABLE "arcane_codex"."character_ability_scores" ADD CONSTRAINT "character_ability_scores_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "arcane_codex"."characters"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_ability_scores" ADD CONSTRAINT "character_ability_scores_ability_id_abilities_id_fk" FOREIGN KEY ("ability_id") REFERENCES "arcane_codex"."abilities"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_classes" ADD CONSTRAINT "character_classes_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "arcane_codex"."characters"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "arcane_codex"."character_classes" ADD CONSTRAINT "character_classes_class_id_classes_id_fk" FOREIGN KEY ("class_id") REFERENCES "arcane_codex"."classes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "arcane_codex"."character_classes" ADD CONSTRAINT "character_classes_subclass_id_subclasses_id_fk" FOREIGN KEY ("subclass_id") REFERENCES "arcane_codex"."subclasses"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_items" ADD CONSTRAINT "character_items_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "arcane_codex"."characters"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_items" ADD CONSTRAINT "character_items_item_id_items_id_fk" FOREIGN KEY ("item_id") REFERENCES "arcane_codex"."items"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_skills" ADD CONSTRAINT "character_skills_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "arcane_codex"."characters"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_skills" ADD CONSTRAINT "character_skills_skill_id_skills_id_fk" FOREIGN KEY ("skill_id") REFERENCES "arcane_codex"."skills"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_spells" ADD CONSTRAINT "character_spells_character_id_characters_id_fk" FOREIGN KEY ("character_id") REFERENCES "arcane_codex"."characters"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."character_spells" ADD CONSTRAINT "character_spells_spell_id_spells_id_fk" FOREIGN KEY ("spell_id") REFERENCES "arcane_codex"."spells"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "arcane_codex"."character_spells" ADD CONSTRAINT "character_spells_source_class_id_classes_id_fk" FOREIGN KEY ("source_class_id") REFERENCES "arcane_codex"."classes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "arcane_codex"."character_spells" ADD CONSTRAINT "character_spells_source_class_id_classes_id_fk" FOREIGN KEY ("source_class_id") REFERENCES "arcane_codex"."classes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."characters" ADD CONSTRAINT "characters_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "citadel_admin"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."characters" ADD CONSTRAINT "characters_race_id_races_id_fk" FOREIGN KEY ("race_id") REFERENCES "arcane_codex"."races"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."characters" ADD CONSTRAINT "characters_subrace_id_subraces_id_fk" FOREIGN KEY ("subrace_id") REFERENCES "arcane_codex"."subraces"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."characters" ADD CONSTRAINT "characters_background_id_backgrounds_id_fk" FOREIGN KEY ("background_id") REFERENCES "arcane_codex"."backgrounds"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."skills" ADD CONSTRAINT "skills_ability_id_abilities_id_fk" FOREIGN KEY ("ability_id") REFERENCES "arcane_codex"."abilities"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "arcane_codex"."subclasses" ADD CONSTRAINT "subclasses_class_id_classes_id_fk" FOREIGN KEY ("class_id") REFERENCES "arcane_codex"."classes"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "arcane_codex"."subraces" ADD CONSTRAINT "subraces_race_id_races_id_fk" FOREIGN KEY ("race_id") REFERENCES "arcane_codex"."races"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "users_email_idx" ON "citadel_admin"."users" USING btree ("email");

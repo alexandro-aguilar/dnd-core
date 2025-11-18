@@ -58,10 +58,17 @@ erDiagram
     varchar spellcasting_ability
   }
 
+  SUBCLASS {
+    uuid id PK
+    uuid class_id FK
+    varchar name
+    text description
+  }
+
   CHARACTER_CLASS {
     uuid id PK
     uuid character_id FK
-    uuid class_id FK
+    uuid subclass_id FK
     int class_level
   }
 
@@ -142,7 +149,9 @@ erDiagram
   BACKGROUND ||--o{ CHARACTER : "is background of"
 
   CHARACTER ||--o{ CHARACTER_CLASS : "has class levels"
-  "CLASS" ||--o{ CHARACTER_CLASS : "is taken by"
+
+  "CLASS" ||--o{ SUBCLASS : "offers archetype"
+  SUBCLASS ||--o{ CHARACTER_CLASS : "is chosen as"
 
   ABILITY ||--o{ CHARACTER_ABILITY_SCORE : "is scored as"
   CHARACTER ||--o{ CHARACTER_ABILITY_SCORE : "has ability"

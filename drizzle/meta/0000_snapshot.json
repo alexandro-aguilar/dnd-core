@@ -1,5 +1,5 @@
 {
-  "id": "21cbc0a0-e612-4acd-b997-51a3aceec74e",
+  "id": "d7709af8-f93e-4db7-b136-97e21d99c7ad",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -144,8 +144,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "class_id": {
-          "name": "class_id",
+        "subclass_id": {
+          "name": "subclass_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -169,12 +169,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "character_classes_class_id_classes_id_fk": {
-          "name": "character_classes_class_id_classes_id_fk",
+        "character_classes_subclass_id_subclasses_id_fk": {
+          "name": "character_classes_subclass_id_subclasses_id_fk",
           "tableFrom": "character_classes",
-          "tableTo": "classes",
+          "tableTo": "subclasses",
           "schemaTo": "arcane_codex",
-          "columnsFrom": ["class_id"],
+          "columnsFrom": ["subclass_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
@@ -373,7 +373,7 @@
           "name": "source_class_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
@@ -405,7 +405,7 @@
           "schemaTo": "arcane_codex",
           "columnsFrom": ["source_class_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -821,6 +821,55 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "arcane_codex.subclasses": {
+      "name": "subclasses",
+      "schema": "arcane_codex",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "class_id": {
+          "name": "class_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subclasses_class_id_classes_id_fk": {
+          "name": "subclasses_class_id_classes_id_fk",
+          "tableFrom": "subclasses",
+          "tableTo": "classes",
+          "schemaTo": "arcane_codex",
+          "columnsFrom": ["class_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

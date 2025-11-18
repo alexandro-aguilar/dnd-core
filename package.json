@@ -46,7 +46,8 @@
     "workspace:list": "terraform -chdir=terraform workspace list",
     "generate:local": "drizzle-kit generate",
     "migrate:local": "drizzle-kit migrate",
-    "seed:local": "ts-node scripts/seed.ts"
+    "seed:local": "ts-node scripts/seed.ts seed",
+    "clean:local": "ts-node scripts/seed.ts clean"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",

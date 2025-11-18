@@ -1,6 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import { db, pool } from '@src/core/infrastructure/database/postgres-drizzle.config';
-import {
+import { AnyPgTable } from 'drizzle-orm/pg-core';
+import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Client } from 'pg';
+import * as schema from '../app/src/core/infrastructure/database/schema';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const {
   abilities,
   backgrounds,
   characterAbilityScores,
@@ -14,30 +21,35 @@ import {
   races,
   skills,
   spells,
+  subclasses,
   subraces,
   users,
-} from '@src/core/infrastructure/database/schema';
+} = schema;
 
 const userIds = {
   aelar: randomUUID(),
   borin: randomUUID(),
+  seraphina: randomUUID(),
 } as const;
 
 const raceIds = {
   human: randomUUID(),
   elf: randomUUID(),
   dwarf: randomUUID(),
+  tiefling: randomUUID(),
 } as const;
 
 const subraceIds = {
   highElf: randomUUID(),
   woodElf: randomUUID(),
   mountainDwarf: randomUUID(),
+  asmodeusTiefling: randomUUID(),
 } as const;
 
 const backgroundIds = {
   sage: randomUUID(),
   soldier: randomUUID(),
+  acolyte: randomUUID(),
 } as const;
 
 const classIds = {
@@ -45,6 +57,14 @@ const classIds = {
   wizard: randomUUID(),
   cleric: randomUUID(),
   rogue: randomUUID(),
+  paladin: randomUUID(),
+} as const;
+
+const subclassIds = {
+  evocation: randomUUID(),
+  lifeDomain: randomUUID(),
+  battleMaster: randomUUID(),
+  oathOfVengeance: randomUUID(),
 } as const;
 
 const abilityIds = {
@@ -84,6 +104,8 @@ const itemIds = {
   spellbook: randomUUID(),
   warhammer: randomUUID(),
   holySymbol: randomUUID(),
+  greatsword: randomUUID(),
+  plateArmor: randomUUID(),
 } as const;
 
 const spellIds = {
@@ -91,11 +113,13 @@ const spellIds = {
   magicMissile: randomUUID(),
   cureWounds: randomUUID(),
   shieldOfFaith: randomUUID(),
+  wrathfulSmite: randomUUID(),
 } as const;
 
 const characterIds = {
   aelar: randomUUID(),
   borin: randomUUID(),
+  seraphina: randomUUID(),
 } as const;
 
 const createAbilityScores = (characterId: string, scoreMap: Record<keyof typeof abilityIds, number>) =>
@@ -118,7 +142,7 @@ const createCharacterSkills = (
     hasExpertise: Boolean(expertise),
   }));
 
-async function seed() {
+async function seed(db: NodePgDatabase<typeof schema>) {
   const userData = [
     {
       id: userIds.aelar,
@@ -132,23 +156,32 @@ async function seed() {
       name: 'Borin Ironfist',
       passwordHash: '$2b$10$UWx/FxTOfakeHashValueToSimulateBcryptString000',
     },
+    {
+      id: userIds.seraphina,
+      email: 'seraphina@radiant-order.org',
+      name: 'Seraphina Embergrace',
+      passwordHash: '$2b$10$YXNzZW1ibHkuaGFzaC5wbGFjZWhvbGRlci5leGU5OTk5OT',
+    },
   ];
 
   const raceData = [
     { id: raceIds.human, name: 'Human', baseSpeed: 30, size: 'Medium' },
     { id: raceIds.elf, name: 'Elf', baseSpeed: 30, size: 'Medium' },
     { id: raceIds.dwarf, name: 'Dwarf', baseSpeed: 25, size: 'Medium' },
+    { id: raceIds.tiefling, name: 'Tiefling', baseSpeed: 30, size: 'Medium' },
   ];
 
   const subraceData = [
     { id: subraceIds.highElf, raceId: raceIds.elf, name: 'High Elf' },
     { id: subraceIds.woodElf, raceId: raceIds.elf, name: 'Wood Elf' },
     { id: subraceIds.mountainDwarf, raceId: raceIds.dwarf, name: 'Mountain Dwarf' },
+    { id: subraceIds.asmodeusTiefling, raceId: raceIds.tiefling, name: 'Asmodeus Tiefling' },
   ];
 
   const backgroundData = [
     { id: backgroundIds.sage, name: 'Sage', feature: 'Researcher' },
     { id: backgroundIds.soldier, name: 'Soldier', feature: 'Military Rank' },
+    { id: backgroundIds.acolyte, name: 'Acolyte', feature: 'Shelter of the Faithful' },
   ];
 
   const classData = [
@@ -179,6 +212,40 @@ async function seed() {
       hitDie: 'd8',
       primaryAbility: 'DEX',
       spellcastingAbility: null,
+    },
+    {
+      id: classIds.paladin,
+      name: 'Paladin',
+      hitDie: 'd10',
+      primaryAbility: 'STR',
+      spellcastingAbility: 'CHA',
+    },
+  ];
+
+  const subclassData = [
+    {
+      id: subclassIds.evocation,
+      classId: classIds.wizard,
+      name: 'School of Evocation',
+      description: 'Evokers specialize in destructive elemental magic.',
+    },
+    {
+      id: subclassIds.lifeDomain,
+      classId: classIds.cleric,
+      name: 'Life Domain',
+      description: 'Bolsters healing and protective magic.',
+    },
+    {
+      id: subclassIds.battleMaster,
+      classId: classIds.fighter,
+      name: 'Battle Master',
+      description: 'Martial tactician focused on superiority dice.',
+    },
+    {
+      id: subclassIds.oathOfVengeance,
+      classId: classIds.paladin,
+      name: 'Oath of Vengeance',
+      description: 'Paladins who hunt the most grievous foes relentlessly.',
     },
   ];
 
@@ -220,6 +287,8 @@ async function seed() {
     { id: itemIds.spellbook, name: 'Spellbook', type: 'Adventuring Gear', weight: '3', cost: '50' },
     { id: itemIds.warhammer, name: 'Warhammer', type: 'Weapon', weight: '2', cost: '15' },
     { id: itemIds.holySymbol, name: 'Holy Symbol (Amulet)', type: 'Adventuring Gear', weight: '1', cost: '5' },
+    { id: itemIds.greatsword, name: 'Greatsword', type: 'Weapon', weight: '6', cost: '50' },
+    { id: itemIds.plateArmor, name: 'Plate Armor', type: 'Armor', weight: '65', cost: '1500' },
   ];
 
   const spellData = [
@@ -271,6 +340,19 @@ async function seed() {
       concentration: true,
       description: 'A shimmering field surrounds a creature granting it +2 AC for the duration.',
     },
+    {
+      id: spellIds.wrathfulSmite,
+      name: 'Wrathful Smite',
+      level: 1,
+      school: 'Evocation',
+      castingTime: '1 bonus action',
+      range: 'Self',
+      components: 'V',
+      duration: 'Up to 1 minute',
+      concentration: true,
+      description:
+        'The next time you hit with a melee weapon attack, it deals extra psychic damage and can frighten the target.',
+    },
   ];
 
   const characterData = [
@@ -316,6 +398,27 @@ async function seed() {
       bonds: 'Owes his life to the Hammershield regiment.',
       flaws: 'Struggles to abandon a fight once it has begun.',
     },
+    {
+      id: characterIds.seraphina,
+      userId: userIds.seraphina,
+      name: 'Seraphina Embergrace',
+      level: 7,
+      raceId: raceIds.tiefling,
+      subraceId: subraceIds.asmodeusTiefling,
+      backgroundId: backgroundIds.acolyte,
+      alignment: 'Lawful Neutral',
+      experiencePoints: 23000,
+      maxHitPoints: 52,
+      currentHitPoints: 48,
+      temporaryHitPoints: 0,
+      armorClass: 19,
+      speed: 30,
+      inspiration: false,
+      personalityTraits: 'Quietly intense; eyes always search for injustice.',
+      ideals: 'Redemption is forged through righteous action.',
+      bonds: 'Swore vengeance on the fiends who threatened her sister.',
+      flaws: 'Holds grudges and can become consumed by the hunt.',
+    },
   ];
 
   const characterClassData = [
@@ -323,19 +426,29 @@ async function seed() {
       id: randomUUID(),
       characterId: characterIds.aelar,
       classId: classIds.wizard,
+      subclassId: subclassIds.evocation,
       classLevel: 5,
     },
     {
       id: randomUUID(),
       characterId: characterIds.borin,
       classId: classIds.cleric,
+      subclassId: subclassIds.lifeDomain,
       classLevel: 4,
     },
     {
       id: randomUUID(),
       characterId: characterIds.borin,
       classId: classIds.fighter,
+      subclassId: subclassIds.battleMaster,
       classLevel: 1,
+    },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      classId: classIds.paladin,
+      subclassId: subclassIds.oathOfVengeance,
+      classLevel: 7,
     },
   ];
 
@@ -356,6 +469,14 @@ async function seed() {
       wis: 16,
       cha: 12,
     }),
+    ...createAbilityScores(characterIds.seraphina, {
+      str: 18,
+      dex: 12,
+      con: 14,
+      int: 10,
+      wis: 13,
+      cha: 16,
+    }),
   ];
 
   const characterSkillData = [
@@ -370,6 +491,12 @@ async function seed() {
       { skillKey: 'insight' },
       { skillKey: 'medicine' },
       { skillKey: 'religion' },
+    ]),
+    ...createCharacterSkills(characterIds.seraphina, [
+      { skillKey: 'athletics' },
+      { skillKey: 'intimidation' },
+      { skillKey: 'persuasion' },
+      { skillKey: 'perception' },
     ]),
   ];
 
@@ -434,6 +561,46 @@ async function seed() {
       customName: null,
       notes: 'Gleams with gentle radiance when channeling divinity.',
     },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      itemId: itemIds.greatsword,
+      quantity: 1,
+      isEquipped: true,
+      equippedSlot: 'main_hand',
+      customName: 'Judicator',
+      notes: 'Gleaming blade etched with infernal lettering.',
+    },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      itemId: itemIds.plateArmor,
+      quantity: 1,
+      isEquipped: true,
+      equippedSlot: 'armor',
+      customName: null,
+      notes: 'High-polish plate chased with silver inlays.',
+    },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      itemId: itemIds.shield,
+      quantity: 1,
+      isEquipped: true,
+      equippedSlot: 'off_hand',
+      customName: 'Vigilant Bulwark',
+      notes: 'Inscribed with the Radiant Order insignia.',
+    },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      itemId: itemIds.holySymbol,
+      quantity: 1,
+      isEquipped: true,
+      equippedSlot: 'neck',
+      customName: 'Sigil of Retribution',
+      notes: 'Warm to the touch when an oath is invoked.',
+    },
   ];
 
   const characterSpellData = [
@@ -469,6 +636,30 @@ async function seed() {
       prepared: true,
       sourceClassId: classIds.cleric,
     },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      spellId: spellIds.cureWounds,
+      known: true,
+      prepared: true,
+      sourceClassId: classIds.paladin,
+    },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      spellId: spellIds.shieldOfFaith,
+      known: true,
+      prepared: true,
+      sourceClassId: classIds.paladin,
+    },
+    {
+      id: randomUUID(),
+      characterId: characterIds.seraphina,
+      spellId: spellIds.wrathfulSmite,
+      known: true,
+      prepared: true,
+      sourceClassId: classIds.paladin,
+    },
   ];
 
   await db.transaction(async (tx) => {
@@ -482,6 +673,7 @@ async function seed() {
     await tx.delete(items);
     await tx.delete(skills);
     await tx.delete(abilities);
+    await tx.delete(subclasses);
     await tx.delete(classes);
     await tx.delete(backgrounds);
     await tx.delete(subraces);
@@ -493,6 +685,7 @@ async function seed() {
     await tx.insert(subraces).values(subraceData);
     await tx.insert(backgrounds).values(backgroundData);
     await tx.insert(classes).values(classData);
+    await tx.insert(subclasses).values(subclassData);
     await tx.insert(abilities).values(abilityData);
     await tx.insert(skills).values(skillData);
     await tx.insert(items).values(itemData);
@@ -506,14 +699,89 @@ async function seed() {
   });
 }
 
-seed()
-  .then(() => {
-    console.log('Database seeded with D&D 5e sample data.');
-  })
-  .catch((error) => {
-    console.error('Failed to seed database', error);
-    process.exitCode = 1;
-  })
-  .finally(async () => {
-    await pool.end();
+async function clean(db: NodePgDatabase<typeof schema>) {
+  const tables: AnyPgTable[] = [
+    characterSpells,
+    characterItems,
+    characterSkills,
+    characterAbilityScores,
+    characterClasses,
+    characters,
+    spells,
+    items,
+    skills,
+    abilities,
+    subclasses,
+    classes,
+    backgrounds,
+    subraces,
+    races,
+    users,
+  ];
+
+  // Delete data from all tables in a transaction if table exists
+  await db.transaction(async (tx) => {
+    for (const table of tables) {
+      await tx.delete(table);
+    }
   });
+}
+
+function createClient() {
+  try {
+    const client = new Client({
+      host: process.env.DB_HOST as string,
+      port: Number(process.env.DB_PORT) || 5432,
+      user: process.env.DB_USER as string,
+      password: process.env.DB_PASSWORD as string,
+      database: process.env.DB_NAME as string,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
+    });
+
+    return client;
+  } catch (error) {
+    console.error('Error creating database connection:', error);
+    throw error;
+  }
+}
+
+async function main() {
+  const task = process.argv[2];
+  const client = createClient();
+
+  try {
+    await client.connect();
+    const db = drizzle(client, { schema });
+    if (task === 'seed') {
+      try {
+        await clean(db);
+        await seed(db);
+        console.log('Database seeded with D&D 5e sample data.');
+      } catch (error) {
+        console.error('Failed to seed database', error);
+        process.exitCode = 1;
+      }
+    } else if (task === 'clean') {
+      try {
+        await clean(db);
+        console.log('Database cleaned of sample data.');
+      } catch (error) {
+        console.error('Failed to clean database', error);
+        process.exitCode = 1;
+      }
+    } else {
+      console.error('Unknown task. Use "seed" or "clean".');
+      process.exitCode = 1;
+    }
+  } catch (error) {
+    console.error('Error during database operation:', error);
+    throw error;
+  } finally {
+    await client.end();
+  }
+}
+
+main().catch((error) => {
+  console.error('Unexpected error in main execution:', error);
+  process.exitCode = 1;
+});
