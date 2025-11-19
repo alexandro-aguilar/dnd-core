@@ -1,6 +1,7 @@
+import BaseEntity from '@src/core/domain/entities/BaseEntity';
 import ClassDto from '../dtos/ClassDto';
 
-export default class Class {
+export default class Class extends BaseEntity {
   constructor(
     private readonly _id: string,
     private readonly _name: string,
@@ -8,6 +9,7 @@ export default class Class {
     private readonly _primaryAbility: string,
     private readonly _spellcastingAbility?: string | null
   ) {
+    super();
     this.validate();
   }
 

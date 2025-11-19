@@ -1,4 +1,4 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
+import { APIGatewayProxyResultV2 } from 'aws-lambda';
 import ClassDto from '../../domain/dtos/ClassDto';
 import { inject, injectable } from 'inversify';
 import { types } from '../../config/types';
@@ -12,9 +12,7 @@ export default class GetClassesController {
     @inject(types.ClassesRepository) private classRepository: ClassRepository
   ) {}
 
-  async execute(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2<Array<ClassDto>>> {
-    this.logger.info('headers', { headers: event.headers });
-    this.logger.info('GetClassControlle r executed with event:', { event });
+  async execute(): Promise<APIGatewayProxyResultV2<Array<ClassDto>>> {
     const classes = await this.classRepository.listAll();
     return { statusCode: 200, body: JSON.stringify(classes.map((cls) => cls.toDto())) };
   }
