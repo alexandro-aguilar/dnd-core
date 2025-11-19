@@ -12,20 +12,20 @@ import { responseHandler } from '@src/core/middleware/responseHandler';
 import { requestValidator } from '@src/core/middleware/requestValidator';
 import { captureLambdaHandler } from '@aws-lambda-powertools/tracer/middleware';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda';
-import GetClassController from '../controllers/GetClassController';
-import ClassDto from '../../domain/dtos/ClassDto';
+import GetRacesController from '../controllers/GetRacesController';
+import RaceDto from '../../domain/dtos/RaceDto';
 
 const tracer = container.get<TracerService>(types.TracerService).tracer;
 const metrics = container.get<MetricsService>(types.MetricsService).metrics;
 const logger: ILogger = container.get(types.Logger);
 
 export const handler = middy(
-  async (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2<Array<ClassDto>>> => {
+  async (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2<Array<RaceDto>>> => {
     logger.addContext({ requestId: context.awsRequestId });
     logger.info('env:', { env: process.env });
 
-    const getClassController = container.get<GetClassController>(types.GetClassController);
-    const response = await getClassController.execute(event);
+    const getRacesController = container.get<GetRacesController>(types.GetRacesController);
+    const response = await getRacesController.execute();
 
     return response;
   }

@@ -25,7 +25,7 @@ export const handler = middy(
     logger.info('env:', { env: process.env });
 
     const getClassesController = container.get<GetClassesController>(types.GetClassesController);
-    const response = await getClassesController.execute(event);
+    const response = await getClassesController.execute();
 
     return response;
   }
