@@ -51,30 +51,4 @@ export default [
     },
   },
 ];
-// export default [
-//   {
-//     files: ['**/*.{ts}'],
-//     ignores: ['node_modules', 'dist'],
-//     languageOptions: {
-//       parser: tseslint.parser,
-//       parserOptions: {
-//         ecmaVersion: 'latest',
-//         sourceType: 'module',
-//       },
-//     },
-//     plugins: {
-//       '@typescript-eslint': tseslint.plugin,
-//       prettier: prettierPlugin,
-//     },
-//     rules: {
-//       // Base recommended TS rules
-//       ...tseslint.configs.recommended.rules,
 
-//       // Enforce single quotes (no double quotes)
-//       quotes: ['error', 'single', { avoidEscape: true }],
-
-//       // Enforce Prettier formatting
-//       'prettier/prettier': 'error',
-//     },
-//   },
-// ];

@@ -2,14 +2,14 @@ import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import ClassDto from '../../domain/dtos/ClassDto';
 import { inject, injectable } from 'inversify';
 import { types } from '../../config/types';
-import ClassRepository from '../../domain/repositories/ClassRepository';
+import ClassRepository from '../../domain/repositories/ClassesRepository';
 import ILogger from '@src/core/utils/ILogger';
 
 @injectable()
-export default class GetClassController {
+export default class GetClassesController {
   constructor(
     @inject(types.Logger) private logger: ILogger,
-    @inject(types.ClassRepository) private classRepository: ClassRepository
+    @inject(types.ClassesRepository) private classRepository: ClassRepository
   ) {}
 
   async execute(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2<Array<ClassDto>>> {

@@ -3,16 +3,15 @@ import { classes as classesTable } from '@src/core/infrastructure/database/schem
 import ILogger from '@src/core/utils/ILogger';
 import { types } from '@src/modules/class/config/types';
 import Class from '@src/modules/class/domain/entities/Class';
-import ClassRepository from '@src/modules/class/domain/repositories/ClassRepository';
+import ClassesRepository from '@src/modules/class/domain/repositories/ClassesRepository';
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export default class DrizzleClassRepository implements ClassRepository {
+export default class DrizzleClassesRepository implements ClassesRepository {
   constructor(@inject(types.Logger) private logger: ILogger) {}
   async listAll(): Promise<Array<Class>> {
     try {
-      this.logger.info('Fetching all classes from DrizzleClassRepository');
-
+      this.logger.info('Fetching all classes from DrizzleClassesRepository');
       const results = await db.select().from(classesTable).execute();
       this.logger.info(`Fetched ${results.length} classes from database`);
       if (!results) return [];

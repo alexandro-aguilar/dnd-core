@@ -12,7 +12,7 @@ import { responseHandler } from '@src/core/middleware/responseHandler';
 import { requestValidator } from '@src/core/middleware/requestValidator';
 import { captureLambdaHandler } from '@aws-lambda-powertools/tracer/middleware';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-lambda';
-import GetClassController from '../controllers/GetClassController';
+import GetClassesController from '../controllers/GetClassesController';
 import ClassDto from '../../domain/dtos/ClassDto';
 
 const tracer = container.get<TracerService>(types.TracerService).tracer;
@@ -24,8 +24,8 @@ export const handler = middy(
     logger.addContext({ requestId: context.awsRequestId });
     logger.info('env:', { env: process.env });
 
-    const getClassController = container.get<GetClassController>(types.GetClassController);
-    const response = await getClassController.execute(event);
+    const getClassesController = container.get<GetClassesController>(types.GetClassesController);
+    const response = await getClassesController.execute(event);
 
     return response;
   }

@@ -1,5 +1,5 @@
 import Class from '../entities/Class';
 
-export default interface ClassRepository {
+export default interface ClassesRepository {
   listAll(): Promise<Array<Class>>;
 }

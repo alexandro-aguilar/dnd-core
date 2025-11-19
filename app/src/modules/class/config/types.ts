@@ -5,6 +5,6 @@ export const types = {
   Logger: Symbol.for('Logger'),
   MetricsService: Symbol.for('MetricsService'),
   TracerService: Symbol.for('TracerService'),
-  ClassRepository: Symbol.for('ClassRepository'),
-  GetClassController: Symbol.for('GetClassController'),
+  ClassesRepository: Symbol.for('ClassesRepository'),
+  GetClassesController: Symbol.for('GetClassesController'),
 };
