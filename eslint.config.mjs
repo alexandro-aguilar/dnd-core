@@ -5,19 +5,8 @@ import tsParser from '@typescript-eslint/parser';
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
   {
-    files: [
-      '**/*.ts',
-      '!*.d.ts',
-      '**/*.mts',
-      '**/*.cts',
-      '!*.test.ts',
-      '!*.spec.ts',
-      '!esbuild.ts',
-      '!cdk.out/**',
-      '.dist/',
-      '.dist/**/*.js',
-    ],
-    ignores: ['node_modules/', '.dist/**/*.js', 'cdk.out/**/*.js', 'esbuild.ts', '.dist/'],
+    files: ['**/*.ts'],
+    ignores: ['node_modules/', 'esbuild.ts', '.dist/*'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

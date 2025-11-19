@@ -6,6 +6,20 @@ import NotFoundException from '../domain/exceptions/NotFoundException';
 import Exception from '../domain/exceptions/Exception';
 import { MiddlewareObj } from '@middy/core';
 
+const headers = (request: { event: APIGatewayProxyEventV2 }) => {
+  // verify if content types comes, if not, add it with application/json
+  if (!request.event.headers || !request.event.headers['Content-Type']) {
+    request.event.headers = {
+      ...request.event.headers,
+      'Content-Type': 'application/json',
+    };
+  }
+  return Object.fromEntries(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    Object.entries(request.event.headers || {}).filter(([_, v]) => v !== undefined)
+  ) as Record<string, string | number | boolean>;
+};
+
 const responseHandler = (): MiddlewareObj<APIGatewayProxyEventV2, APIGatewayProxyResult> => {
   return {
     after: (request) => {
@@ -20,10 +34,7 @@ const responseHandler = (): MiddlewareObj<APIGatewayProxyEventV2, APIGatewayProx
           body: response.body,
         });
         response.statusCode = response.statusCode || 200;
-        response.headers = Object.fromEntries(
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          Object.entries(request.event.headers || {}).filter(([_, v]) => v !== undefined)
-        ) as Record<string, string | number | boolean>;
+        response.headers = headers(request);
       }
     },
     onError: (request) => {

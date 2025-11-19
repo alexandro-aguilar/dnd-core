@@ -3,8 +3,8 @@
   "packageManager": "yarn@4.9.2",
   "scripts": {
     "format": "prettier --write .",
-    "lint": "yarn eslint .",
-    "lint:fix": "eslint . --fix",
+    "lint": "yarn eslint ./app",
+    "lint:fix": "eslint ./app --fix",
     "build": "ts-node esbuild.ts",
     "build:local": "ts-node esbuild.ts --watch",
     "prepare": "husky",

@@ -9,7 +9,7 @@ export default class PowertoolsLoggerAdapter implements ILogger {
 
   constructor() {
     this.logger = new PowertoolsLogger({
-      serviceName: Environment.POWERTOOLS_SERVICE_NAME ?? 'plant-water-planner-core',
+      serviceName: Environment.POWERTOOLS_SERVICE_NAME,
       logLevel: LogLevel[(Environment.POWERTOOLS_LOG_LEVEL as keyof typeof LogLevel) ?? 'INFO'],
     });
   }
