@@ -71,8 +71,8 @@ lambda_functions = {
   }
 
   getRace = {
-    source_file   = "../.dist/getRaceHandler.js"
-    handler       = "getRaceHandler.handler"
+    source_file   = "../.dist/getRacesHandler.js"
+    handler       = "getRacesHandler.handler"
     runtime       = "nodejs22.x"
     description   = "Retrieves race data"
     memory_size   = 1024
