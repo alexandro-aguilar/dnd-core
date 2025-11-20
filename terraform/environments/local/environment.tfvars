@@ -101,4 +101,68 @@ lambda_functions = {
       }
     ]
   }
+
+  getSubrace = {
+    source_file   = "../.dist/getSubracesHandler.js"
+    handler       = "getSubracesHandler.handler"
+    runtime       = "nodejs22.x"
+    description   = "Retrieves subrace data"
+    memory_size   = 1024
+    timeout       = 10
+    architectures = ["arm64"]
+    layers        = []
+    environment = {
+      NODE_ENV                = "local"
+      LOG_LEVEL               = "debug"
+      LOCALSTACK_HOSTNAME     = "localhost"
+      STAGE                   = "local"
+      OPENAI_API_KEY          = ""
+      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_LOG_LEVEL    = "INFO"
+      PROJECT_NAME            = "DnD"
+      DB_HOST                 = "postgres_dnd-core_db"
+      DB_PORT                 = "5432"
+      DB_USER                 = "postgres"
+      DB_PASSWORD             = "postgres"
+      DB_NAME                 = "dnd-core"
+    }
+    routes = [
+      {
+        method = "GET"
+        path   = "/subraces"
+      }
+    ]
+  }
+
+  getSubclass = {
+    source_file   = "../.dist/getSubclassesHandler.js"
+    handler       = "getSubclassesHandler.handler"
+    runtime       = "nodejs22.x"
+    description   = "Retrieves subclass data"
+    memory_size   = 1024
+    timeout       = 10
+    architectures = ["arm64"]
+    layers        = []
+    environment = {
+      NODE_ENV                = "local"
+      LOG_LEVEL               = "debug"
+      LOCALSTACK_HOSTNAME     = "localhost"
+      STAGE                   = "local"
+      OPENAI_API_KEY          = ""
+      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_LOG_LEVEL    = "INFO"
+      PROJECT_NAME            = "DnD"
+      DB_HOST                 = "postgres_dnd-core_db"
+      DB_PORT                 = "5432"
+      DB_USER                 = "postgres"
+      DB_PASSWORD             = "postgres"
+      DB_NAME                 = "dnd-core"
+    }
+    routes = [
+      {
+        method = "GET"
+        path   = "/subclasses"
+      }
+    ]
+  }
 }
