@@ -3,3 +3,4 @@ export NVM_DIR="$HOME/.nvm"
 
 yarn lint-staged
 yarn tf:fmt
+yarn tflint

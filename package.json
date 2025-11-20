@@ -5,6 +5,7 @@
     "format": "prettier --write .",
     "lint": "yarn eslint ./app",
     "lint:fix": "eslint ./app --fix",
+    "tflint": "tflint",
     "build": "ts-node esbuild.ts",
     "build:local": "ts-node esbuild.ts --watch",
     "prepare": "husky",
