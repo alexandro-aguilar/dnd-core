@@ -6,12 +6,12 @@ import MetricsService from '@src/core/utils/MetricsService';
 import TracerService from '@src/core/utils/TracerService';
 import RacesRepository from '../domain/repositories/RacesRepository';
 import GetRacesController from '../interface/controllers/GetRacesController';
-import PostgresRacesRepository from '../infrastructure/repositories/PostgresRacesRepository';
+import DrizzleRacesRepository from '../infrastructure/repositories/DrizzleRacesRepository';
 
 export const container = new Container();
 
 container.bind<ILogger>(types.Logger).to(PowertoolsLoggerAdapter).inSingletonScope();
 container.bind<MetricsService>(types.MetricsService).to(MetricsService);
 container.bind<TracerService>(types.TracerService).to(TracerService);
-container.bind<RacesRepository>(types.RacesRepository).to(PostgresRacesRepository);
+container.bind<RacesRepository>(types.RacesRepository).to(DrizzleRacesRepository);
 container.bind<GetRacesController>(types.GetRacesController).to(GetRacesController);

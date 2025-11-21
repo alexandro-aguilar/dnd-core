@@ -5,7 +5,7 @@ import MetricsService from '@src/core/utils/MetricsService';
 import TracerService from '@src/core/utils/TracerService';
 import { types } from './types';
 import BackgroundsRepository from '../domain/repositories/BackgroundsRepository';
-import PostgresBackgroundsRepository from '../infrastructure/repositories/PostgresBackgroundsRepository';
+import DrizzleBackgroundsRepository from '../infrastructure/repositories/DrizzleBackgroundsRepository';
 import GetBackgroundsController from '../interface/controllers/GetBackgroundsController';
 
 export const container = new Container();
@@ -13,5 +13,5 @@ export const container = new Container();
 container.bind<ILogger>(types.Logger).to(PowertoolsLoggerAdapter).inSingletonScope();
 container.bind<MetricsService>(types.MetricsService).to(MetricsService);
 container.bind<TracerService>(types.TracerService).to(TracerService);
-container.bind<BackgroundsRepository>(types.BackgroundsRepository).to(PostgresBackgroundsRepository);
+container.bind<BackgroundsRepository>(types.BackgroundsRepository).to(DrizzleBackgroundsRepository);
 container.bind<GetBackgroundsController>(types.GetBackgroundsController).to(GetBackgroundsController);

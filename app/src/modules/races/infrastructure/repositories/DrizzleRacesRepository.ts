@@ -7,11 +7,11 @@ import ILogger from '@src/core/utils/ILogger';
 import { db } from '@src/core/infrastructure/database/postgres-drizzle.config';
 
 @injectable()
-export default class PostgresRacesRepository implements RacesRepository {
+export default class DrizzleRacesRepository implements RacesRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Race>> {
     try {
-      this.logger.info('Fetching all races from PostgresRacesRepository');
+      this.logger.info('Fetching all races from DrizzleRacesRepository');
       const results = await db.select().from(racesTable).execute();
       if (!results) return [];
       return results.map((result) => {

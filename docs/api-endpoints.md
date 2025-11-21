@@ -2,14 +2,14 @@
 
 Every REST endpoint follows the same Lambda + API Gateway pattern described in `terraform/locals.tf`. The table below documents the handlers currently deployed in `lambda_functions` for the `local` environment.
 
-| Method | Path           | Description                                                        | Lambda/Module                                                             |
-| ------ | -------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| `GET`  | `/example`     | Sample handler for connectivity tests.                             | `app/src/modules/example/interface/handlers/exampleHandler.ts`            |
-| `GET`  | `/classes`     | Lists every character class pulled by `PostgresClassesRepository`. | `app/src/modules/class/interface/handlers/getClassHandler.ts`             |
-| `GET`  | `/races`       | Returns all races stored in the `races` table.                     | `app/src/modules/races/interface/handlers/getRacesHandler.ts`             |
-| `GET`  | `/subraces`    | Fetches subraces (child races) from the `subraces` table.          | `app/src/modules/subraces/interface/handlers/getSubracesHandler.ts`       |
-| `GET`  | `/subclasses`  | Retrieves subclasses and their parent classes.                     | `app/src/modules/subClass/interface/handlers/getSubclassesHandler.ts`     |
-| `GET`  | `/backgrounds` | Returns each background and its associated feature.                | `app/src/modules/backgrounds/interface/handlers/getBackgroundsHandler.ts` |
+| Method | Path           | Description                                                       | Lambda/Module                                                             |
+| ------ | -------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `GET`  | `/example`     | Sample handler for connectivity tests.                            | `app/src/modules/example/interface/handlers/exampleHandler.ts`            |
+| `GET`  | `/classes`     | Lists every character class pulled by `DrizzleClassesRepository`. | `app/src/modules/class/interface/handlers/getClassHandler.ts`             |
+| `GET`  | `/races`       | Returns all races stored in the `races` table.                    | `app/src/modules/races/interface/handlers/getRacesHandler.ts`             |
+| `GET`  | `/subraces`    | Fetches subraces (child races) from the `subraces` table.         | `app/src/modules/subraces/interface/handlers/getSubracesHandler.ts`       |
+| `GET`  | `/subclasses`  | Retrieves subclasses and their parent classes.                    | `app/src/modules/subClass/interface/handlers/getSubclassesHandler.ts`     |
+| `GET`  | `/backgrounds` | Returns each background and its associated feature.               | `app/src/modules/backgrounds/interface/handlers/getBackgroundsHandler.ts` |
 
 ## Base URL
 

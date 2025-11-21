@@ -7,11 +7,11 @@ import Subclass from '../../domain/entities/Subclass';
 import SubclassesRepository from '../../domain/repositories/SubclassesRepository';
 
 @injectable()
-export default class PostgresSubclassesRepository implements SubclassesRepository {
+export default class DrizzleSubclassesRepository implements SubclassesRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Subclass>> {
     try {
-      this.logger.info('Fetching all subclasses from PostgresSubclassesRepository');
+      this.logger.info('Fetching all subclasses from DrizzleSubclassesRepository');
       const results = await db.select().from(subclassesTable).execute();
       if (!results) return [];
 

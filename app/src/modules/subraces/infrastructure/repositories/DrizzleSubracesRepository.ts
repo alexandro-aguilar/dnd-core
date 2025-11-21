@@ -7,11 +7,11 @@ import Subrace from '../../domain/entities/Subrace';
 import SubracesRepository from '../../domain/repositories/SubracesRepository';
 
 @injectable()
-export default class PostgresSubracesRepository implements SubracesRepository {
+export default class DrizzleSubracesRepository implements SubracesRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Subrace>> {
     try {
-      this.logger.info('Fetching all subraces from PostgresSubracesRepository');
+      this.logger.info('Fetching all subraces from DrizzleSubracesRepository');
       const results = await db.select().from(subracesTable).execute();
       if (!results) return [];
 

@@ -5,7 +5,7 @@ import MetricsService from '@src/core/utils/MetricsService';
 import TracerService from '@src/core/utils/TracerService';
 import { types } from './types';
 import SkillsRepository from '../domain/repositories/SkillsRepository';
-import PostgresSkillsRepository from '../infrastructure/repositories/PostgresSkillsRepository';
+import DrizzleSkillsRepository from '../infrastructure/repositories/DrizzleSkillsRepository';
 import GetSkillsController from '../interface/controllers/GetSkillsController';
 
 export const container = new Container();
@@ -13,5 +13,5 @@ export const container = new Container();
 container.bind<ILogger>(types.Logger).to(PowertoolsLoggerAdapter).inSingletonScope();
 container.bind<MetricsService>(types.MetricsService).to(MetricsService);
 container.bind<TracerService>(types.TracerService).to(TracerService);
-container.bind<SkillsRepository>(types.SkillsRepository).to(PostgresSkillsRepository);
+container.bind<SkillsRepository>(types.SkillsRepository).to(DrizzleSkillsRepository);
 container.bind<GetSkillsController>(types.GetSkillsController).to(GetSkillsController);

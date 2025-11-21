@@ -38,7 +38,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["classes"]
             },
-            "description": "Returns every class from `PostgresClassesRepository`."
+            "description": "Returns every class from `DrizzleClassesRepository`."
           },
           "response": []
         }
@@ -57,7 +57,7 @@
               "host": ["{{baseUrl}}"],
               "path": ["races"]
             },
-            "description": "Lists all races served by `PostgresRacesRepository`."
+            "description": "Lists all races served by `DrizzleRacesRepository`."
           },
           "response": []
         },

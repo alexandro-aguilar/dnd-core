@@ -7,11 +7,11 @@ import ClassesRepository from '@src/modules/classes/domain/repositories/ClassesR
 import { inject, injectable } from 'inversify';
 
 @injectable()
-export default class PostgresClassesRepository implements ClassesRepository {
+export default class DrizzleClassesRepository implements ClassesRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Class>> {
     try {
-      this.logger.info('Fetching all classes from PostgresClassesRepository');
+      this.logger.info('Fetching all classes from DrizzleClassesRepository');
       const results = await db.select().from(classesTable).execute();
       if (!results) return [];
       return results.map((result) => {

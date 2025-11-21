@@ -7,11 +7,11 @@ import AbilitiesRepository from '../../domain/repositories/AbilitiesRepository';
 import Ability from '../../domain/entities/Ability';
 
 @injectable()
-export default class PostgresAbilitiesRepository implements AbilitiesRepository {
+export default class DrizzleAbilitiesRepository implements AbilitiesRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Ability>> {
     try {
-      this.logger.info('Fetching all abilities from PostgresAbilitiesRepository');
+      this.logger.info('Fetching all abilities from DrizzleAbilitiesRepository');
       const results = await db.select().from(abilitiesTable).execute();
       if (!results) return [];
 

@@ -7,11 +7,11 @@ import ItemsRepository from '../../domain/repositories/ItemsRepository';
 import Item from '../../domain/entities/Item';
 
 @injectable()
-export default class PostgresItemsRepository implements ItemsRepository {
+export default class DrizzleItemsRepository implements ItemsRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Item>> {
     try {
-      this.logger.info('Fetching all items from PostgresItemsRepository');
+      this.logger.info('Fetching all items from DrizzleItemsRepository');
       const results = await db.select().from(itemsTable).execute();
       if (!results) return [];
 

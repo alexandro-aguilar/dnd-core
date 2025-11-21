@@ -7,11 +7,11 @@ import SpellsRepository from '../../domain/repositories/SpellsRepository';
 import Spell from '../../domain/entities/Spell';
 
 @injectable()
-export default class PostgresSpellsRepository implements SpellsRepository {
+export default class DrizzleSpellsRepository implements SpellsRepository {
   constructor(@inject(types.Logger) private readonly logger: ILogger) {}
   async listAll(): Promise<Array<Spell>> {
     try {
-      this.logger.info('Fetching all spells from PostgresSpellsRepository');
+      this.logger.info('Fetching all spells from DrizzleSpellsRepository');
       const results = await db.select().from(spellsTable).execute();
       if (!results) return [];
 
