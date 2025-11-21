@@ -171,6 +171,25 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Spells",
+      "item": [
+        {
+          "name": "Get Spells",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/spells",
+              "host": ["{{baseUrl}}"],
+              "path": ["spells"]
+            },
+            "description": "Retrieves all spells including casting details and descriptions."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
