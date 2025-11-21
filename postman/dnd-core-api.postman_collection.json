@@ -152,6 +152,25 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Items",
+      "item": [
+        {
+          "name": "Get Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["items"]
+            },
+            "description": "Retrieves all items including optional weight and cost values."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

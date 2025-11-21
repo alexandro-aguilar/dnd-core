@@ -229,4 +229,36 @@ lambda_functions = {
       }
     ]
   }
+
+  getItem = {
+    source_file   = "../.dist/getItemsHandler.js"
+    handler       = "getItemsHandler.handler"
+    runtime       = "nodejs22.x"
+    description   = "Retrieves item data"
+    memory_size   = 1024
+    timeout       = 10
+    architectures = ["arm64"]
+    layers        = []
+    environment = {
+      NODE_ENV                = "local"
+      LOG_LEVEL               = "debug"
+      LOCALSTACK_HOSTNAME     = "localhost"
+      STAGE                   = "local"
+      OPENAI_API_KEY          = ""
+      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_LOG_LEVEL    = "INFO"
+      PROJECT_NAME            = "DnD"
+      DB_HOST                 = "postgres_dnd-core_db"
+      DB_PORT                 = "5432"
+      DB_USER                 = "postgres"
+      DB_PASSWORD             = "postgres"
+      DB_NAME                 = "dnd-core"
+    }
+    routes = [
+      {
+        method = "GET"
+        path   = "/items"
+      }
+    ]
+  }
 }
