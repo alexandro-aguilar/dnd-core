@@ -5,6 +5,7 @@ import ILogger from '@src/core/utils/ILogger';
 import { types } from '../../config/types';
 import CharactersRepository from '../../domain/repositories/CharactersRepository';
 import Character from '../../domain/entities/Character';
+import { eq } from 'drizzle-orm';
 
 @injectable()
 export default class DrizzleCharactersRepository implements CharactersRepository {
@@ -41,6 +42,39 @@ export default class DrizzleCharactersRepository implements CharactersRepository
       );
     } catch (error) {
       this.logger.error('Error fetching characters from database', { error });
+      throw error;
+    }
+  }
+
+  async getById(id: string): Promise<Character | null> {
+    try {
+      this.logger.info(`Fetching character with ID ${id} from DrizzleCharactersRepository`);
+      const result = await db.select().from(charactersTable).where(eq(charactersTable.id, id)).execute();
+      if (!result) return null;
+
+      return new Character(
+        result[0].id,
+        result[0].userId,
+        result[0].name,
+        result[0].level,
+        result[0].raceId,
+        result[0].subraceId ?? null,
+        result[0].backgroundId,
+        result[0].alignment,
+        result[0].experiencePoints,
+        result[0].maxHitPoints,
+        result[0].currentHitPoints,
+        result[0].temporaryHitPoints,
+        result[0].armorClass,
+        result[0].speed,
+        result[0].inspiration,
+        result[0].personalityTraits ?? null,
+        result[0].ideals ?? null,
+        result[0].bonds ?? null,
+        result[0].flaws ?? null
+      );
+    } catch (error) {
+      this.logger.error(`Error fetching character with ID ${id} from database`, { error });
       throw error;
     }
   }

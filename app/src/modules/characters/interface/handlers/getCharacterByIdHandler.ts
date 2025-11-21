@@ -6,28 +6,31 @@ import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-la
 import { container } from '../../config/container';
 import { types } from '../../config/types';
 import { requestHandler } from '@src/core/middleware/requestHandler';
+import { requestValidator } from '@src/core/middleware/requestValidator';
 import { responseHandler } from '@src/core/middleware/responseHandler';
 import ILogger from '@src/core/utils/ILogger';
 import MetricsService from '@src/core/utils/MetricsService';
 import TracerService from '@src/core/utils/TracerService';
-import GetCharactersController from '../controllers/GetCharactersController';
+import { inputGetCharacterByIdSchema } from './inputGetCharacterByIdSchema';
 import CharacterDto from '../../domain/dtos/CharacterDto';
+import GetCharacterByIdController from '../controllers/GetCharacterByIdController';
 
 const tracer = container.get<TracerService>(types.TracerService).tracer;
 const metrics = container.get<MetricsService>(types.MetricsService).metrics;
 const logger: ILogger = container.get(types.Logger);
 
 export const handler = middy(
-  async (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2<Array<CharacterDto>>> => {
+  async (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2<CharacterDto>> => {
     logger.addContext({ requestId: context.awsRequestId });
     logger.info('env:', { env: process.env });
 
-    const getCharactersController = container.get<GetCharactersController>(types.GetCharactersController);
-    const response = await getCharactersController.execute();
+    const getCharacterByIdController = container.get<GetCharacterByIdController>(types.GetCharacterByIdController);
+    const response = await getCharacterByIdController.execute(event);
 
     return response;
   }
 )
+  .use(requestValidator(inputGetCharacterByIdSchema))
   .use(requestHandler(metrics))
   .use(
     logMetrics(metrics, {

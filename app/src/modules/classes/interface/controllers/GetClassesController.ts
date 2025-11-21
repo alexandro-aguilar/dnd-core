@@ -13,6 +13,7 @@ export default class GetClassesController {
   ) {}
 
   async execute(): Promise<APIGatewayProxyResultV2<Array<ClassDto>>> {
+    this.logger.info('Executing GetClassesController');
     const classes = await this.classRepository.listAll();
     return { statusCode: 200, body: JSON.stringify(classes.map((cls) => cls.toDto())) };
   }
