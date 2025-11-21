@@ -114,6 +114,25 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Abilities",
+      "item": [
+        {
+          "name": "Get Abilities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/abilities",
+              "host": ["{{baseUrl}}"],
+              "path": ["abilities"]
+            },
+            "description": "Retrieves ability list (code + name) from the abilities table."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
