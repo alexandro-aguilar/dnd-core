@@ -190,6 +190,25 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Characters",
+      "item": [
+        {
+          "name": "Get Characters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/characters",
+              "host": ["{{baseUrl}}"],
+              "path": ["characters"]
+            },
+            "description": "Retrieves every character record with core stats and references."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

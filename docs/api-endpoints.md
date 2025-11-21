@@ -10,6 +10,11 @@ Every REST endpoint follows the same Lambda + API Gateway pattern described in `
 | `GET`  | `/subraces`    | Fetches subraces (child races) from the `subraces` table.         | `app/src/modules/subraces/interface/handlers/getSubracesHandler.ts`       |
 | `GET`  | `/subclasses`  | Retrieves subclasses and their parent classes.                    | `app/src/modules/subClass/interface/handlers/getSubclassesHandler.ts`     |
 | `GET`  | `/backgrounds` | Returns each background and its associated feature.               | `app/src/modules/backgrounds/interface/handlers/getBackgroundsHandler.ts` |
+| `GET`  | `/abilities`   | Lists ability codes and names.                                    | `app/src/modules/abilities/interface/handlers/getAbilitiesHandler.ts`     |
+| `GET`  | `/skills`      | Returns skills with their governing ability IDs.                  | `app/src/modules/skills/interface/handlers/getSkillsHandler.ts`           |
+| `GET`  | `/items`       | Retrieves items with their type, weight, and cost.                | `app/src/modules/items/interface/handlers/getItemsHandler.ts`             |
+| `GET`  | `/spells`      | Lists spells including casting details and descriptions.          | `app/src/modules/spells/interface/handlers/getSpellsHandler.ts`           |
+| `GET`  | `/characters`  | Lists characters and their core stats/background info.            | `app/src/modules/characters/interface/handlers/getCharactersHandler.ts`   |
 
 ## Base URL
 
