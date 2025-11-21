@@ -1,0 +1,126 @@
+{
+  "info": {
+    "name": "DnD Core API",
+    "_postman_id": "8a0f4b6c-dndc-4747-9c5b-collection",
+    "description": "Collection covering every REST endpoint exposed by the DnD Terraform project. Update the `baseUrl` variable to match your deployed API Gateway endpoint or LocalStack invoke URL before sending requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Example",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/example",
+              "host": ["{{baseUrl}}"],
+              "path": ["example"]
+            },
+            "description": "Smoke test lambda defined in `app/src/modules/example`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "item": [
+        {
+          "name": "Get Classes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/classes",
+              "host": ["{{baseUrl}}"],
+              "path": ["classes"]
+            },
+            "description": "Returns every class from `PostgresClassesRepository`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Races",
+      "item": [
+        {
+          "name": "Get Races",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/races",
+              "host": ["{{baseUrl}}"],
+              "path": ["races"]
+            },
+            "description": "Lists all races served by `PostgresRacesRepository`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Subraces",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/subraces",
+              "host": ["{{baseUrl}}"],
+              "path": ["subraces"]
+            },
+            "description": "Lists every subrace sourced from the `subraces` table."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Subclasses",
+      "item": [
+        {
+          "name": "Get Subclasses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/subclasses",
+              "host": ["{{baseUrl}}"],
+              "path": ["subclasses"]
+            },
+            "description": "Returns subclasses with their parent class references."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Backgrounds",
+      "item": [
+        {
+          "name": "Get Backgrounds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/backgrounds",
+              "host": ["{{baseUrl}}"],
+              "path": ["backgrounds"]
+            },
+            "description": "Retrieves character backgrounds and their features."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.example.com/dev",
+      "type": "string"
+    }
+  ]
+}
