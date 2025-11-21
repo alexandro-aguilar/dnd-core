@@ -4,7 +4,7 @@ import { types } from '../../config/types';
 import { container } from '../../config/container';
 import ILogger from '../../../../core/utils/ILogger';
 import MetricsService from '@src/core/utils/MetricsService';
-import { inputGetClassSchema } from './inputGetClassSchema';
+import { inputGetClassSchema } from './inputGetClassesSchema';
 import TracerService from '../../../../core/utils/TracerService';
 import { requestHandler } from '@src/core/middleware/requestHandler';
 import { logMetrics } from '@aws-lambda-powertools/metrics/middleware';

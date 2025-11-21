@@ -38,9 +38,9 @@ lambda_functions = {
     ]
   }
 
-  getClass = {
-    source_file   = "../.dist/getClassHandler.js"
-    handler       = "getClassHandler.handler"
+  getClasses = {
+    source_file   = "../.dist/getClassesHandler.js"
+    handler       = "getClassesHandler.handler"
     runtime       = "nodejs22.x"
     description   = "Retrieves class data"
     memory_size   = 1024
