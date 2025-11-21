@@ -133,6 +133,25 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Skills",
+      "item": [
+        {
+          "name": "Get Skills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/skills",
+              "host": ["{{baseUrl}}"],
+              "path": ["skills"]
+            },
+            "description": "Returns every skill and the ability it references."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
