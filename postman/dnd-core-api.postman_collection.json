@@ -207,6 +207,20 @@
             "description": "Retrieves every character record with core stats and references."
           },
           "response": []
+        },
+        {
+          "name": "Get Character By Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/characters/{{characterId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["characters", "{{characterId}}"]
+            },
+            "description": "Retrieves a single character by its id."
+          },
+          "response": []
         }
       ]
     }

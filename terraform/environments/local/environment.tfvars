@@ -53,7 +53,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getClasses"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -70,7 +70,7 @@ lambda_functions = {
     ]
   }
 
-  getRace = {
+  getRaces = {
     source_file   = "../.dist/getRacesHandler.js"
     handler       = "getRacesHandler.handler"
     runtime       = "nodejs22.x"
@@ -85,7 +85,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getRaces"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -102,7 +102,7 @@ lambda_functions = {
     ]
   }
 
-  getSubrace = {
+  getSubraces = {
     source_file   = "../.dist/getSubracesHandler.js"
     handler       = "getSubracesHandler.handler"
     runtime       = "nodejs22.x"
@@ -117,7 +117,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getSubraces"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -134,7 +134,7 @@ lambda_functions = {
     ]
   }
 
-  getSubclass = {
+  getSubclasses = {
     source_file   = "../.dist/getSubclassesHandler.js"
     handler       = "getSubclassesHandler.handler"
     runtime       = "nodejs22.x"
@@ -149,7 +149,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getSubclasses"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -166,7 +166,7 @@ lambda_functions = {
     ]
   }
 
-  getAbility = {
+  getAbilities = {
     source_file   = "../.dist/getAbilitiesHandler.js"
     handler       = "getAbilitiesHandler.handler"
     runtime       = "nodejs22.x"
@@ -181,7 +181,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getAbilities"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -198,7 +198,7 @@ lambda_functions = {
     ]
   }
 
-  getSkill = {
+  getSkills = {
     source_file   = "../.dist/getSkillsHandler.js"
     handler       = "getSkillsHandler.handler"
     runtime       = "nodejs22.x"
@@ -213,7 +213,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getSkills"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -230,7 +230,7 @@ lambda_functions = {
     ]
   }
 
-  getItem = {
+  getItems = {
     source_file   = "../.dist/getItemsHandler.js"
     handler       = "getItemsHandler.handler"
     runtime       = "nodejs22.x"
@@ -245,7 +245,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getItems"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -262,7 +262,7 @@ lambda_functions = {
     ]
   }
 
-  getSpell = {
+  getSpells = {
     source_file   = "../.dist/getSpellsHandler.js"
     handler       = "getSpellsHandler.handler"
     runtime       = "nodejs22.x"
@@ -277,7 +277,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getSpells"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -294,7 +294,7 @@ lambda_functions = {
     ]
   }
 
-  getCharacter = {
+  getCharacters = {
     source_file   = "../.dist/getCharactersHandler.js"
     handler       = "getCharactersHandler.handler"
     runtime       = "nodejs22.x"
@@ -309,7 +309,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-classes"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getCharacters"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -322,6 +322,38 @@ lambda_functions = {
       {
         method = "GET"
         path   = "/characters"
+      }
+    ]
+  }
+
+  getCharacterById = {
+    source_file   = "../.dist/getCharacterByIdHandler.js"
+    handler       = "getCharacterByIdHandler.handler"
+    runtime       = "nodejs22.x"
+    description   = "Retrieves character data"
+    memory_size   = 1024
+    timeout       = 10
+    architectures = ["arm64"]
+    layers        = []
+    environment = {
+      NODE_ENV                = "local"
+      LOG_LEVEL               = "debug"
+      LOCALSTACK_HOSTNAME     = "localhost"
+      STAGE                   = "local"
+      OPENAI_API_KEY          = ""
+      POWERTOOLS_SERVICE_NAME = "dnd-core-getCharacterById"
+      POWERTOOLS_LOG_LEVEL    = "INFO"
+      PROJECT_NAME            = "DnD"
+      DB_HOST                 = "postgres_dnd-core_db"
+      DB_PORT                 = "5432"
+      DB_USER                 = "postgres"
+      DB_PASSWORD             = "postgres"
+      DB_NAME                 = "dnd-core"
+    }
+    routes = [
+      {
+        method = "GET"
+        path   = "/characters/{characterId}"
       }
     ]
   }

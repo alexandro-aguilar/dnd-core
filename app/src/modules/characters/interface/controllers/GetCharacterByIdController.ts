@@ -14,8 +14,8 @@ export default class GetCharacterByIdController {
   ) {}
   async execute(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2<CharacterDto>> {
     this.logger.info('Getting character by ID', event.pathParameters);
-    const id = event.pathParameters?.id as string;
-    const result = await this.handler.execute(new CharacterByIdQuery(id));
+    const characterId = event.pathParameters?.characterId as string;
+    const result = await this.handler.execute(new CharacterByIdQuery(characterId));
     return {
       statusCode: 200,
       body: JSON.stringify(result.toDto()),
