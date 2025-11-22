@@ -59,7 +59,7 @@ resource "aws_apigatewayv2_stage" "default" {
 resource "aws_lambda_permission" "apigw" {
   for_each = var.create_apigateway ? var.api_routes : {}
 
-  statement_id = "AllowAPIGatewayInvoke-${replace(replace(replace(replace(replace(each.key, ":", "-"), " ", "-"), "/", "-"), "{", ""), "}", "")}"
+  statement_id  = "AllowAPIGatewayInvoke-${replace(replace(replace(replace(replace(each.key, ":", "-"), " ", "-"), "/", "-"), "{", ""), "}", "")}"
   action        = "lambda:InvokeFunction"
   function_name = var.lambda_functions[each.value.function_key].function_name
   principal     = "apigateway.amazonaws.com"
