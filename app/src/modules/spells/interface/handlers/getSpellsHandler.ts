@@ -22,7 +22,6 @@ const logger: ILogger = container.get(types.Logger);
 export const handler = middy(
   async (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2<Array<SpellDto>>> => {
     logger.addContext({ requestId: context.awsRequestId });
-    logger.info('env:', { env: process.env });
 
     const getSpellsController = container.get<GetSpellsController>(types.GetSpellsController);
     const response = await getSpellsController.execute();

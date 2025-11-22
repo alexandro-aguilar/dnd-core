@@ -22,7 +22,6 @@ const logger: ILogger = container.get(types.Logger);
 export const handler = middy(
   async (event: APIGatewayProxyEventV2, context: Context): Promise<APIGatewayProxyResultV2<Array<SubclassDto>>> => {
     logger.addContext({ requestId: context.awsRequestId });
-    logger.info('env:', { env: process.env });
 
     const getSubclassesController = container.get<GetSubclassesController>(types.GetSubclassesController);
     const response = await getSubclassesController.execute();
