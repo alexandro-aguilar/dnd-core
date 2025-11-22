@@ -135,6 +135,25 @@
       ]
     },
     {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "description": "Retrieves all users from the citadel_admin.users table."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "Skills",
       "item": [
         {

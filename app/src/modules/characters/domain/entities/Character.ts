@@ -1,4 +1,7 @@
+import Subrace from '@src/modules/subraces/domain/entities/Subrace';
 import CharacterDto from '../dtos/CharacterDto';
+import Background from '@src/modules/backgrounds/domain/entities/Background';
+import Race from '@src/modules/races/domain/entities/Race';
 
 export default class Character {
   constructor(
@@ -6,9 +9,9 @@ export default class Character {
     private readonly _userId: string,
     private readonly _name: string,
     private readonly _level: number,
-    private readonly _raceId: string,
-    private readonly _subraceId: string | null,
-    private readonly _backgroundId: string,
+    private readonly _race: string | Race,
+    private readonly _subrace: string | null | Subrace,
+    private readonly _background: string | Background,
     private readonly _alignment: string,
     private readonly _experiencePoints: number,
     private readonly _maxHitPoints: number,
@@ -30,8 +33,8 @@ export default class Character {
     if (!this._userId) throw new Error('Character userId cannot be null or undefined');
     if (!this._name) throw new Error('Character name cannot be null or undefined');
     if (this._level === undefined || this._level === null) throw new Error('Character level cannot be null');
-    if (!this._raceId) throw new Error('Character raceId cannot be null or undefined');
-    if (!this._backgroundId) throw new Error('Character backgroundId cannot be null or undefined');
+    if (!this._race) throw new Error('Character race cannot be null or undefined');
+    if (!this._background) throw new Error('Character background cannot be null or undefined');
     if (!this._alignment) throw new Error('Character alignment cannot be null or undefined');
     if (this._experiencePoints === undefined || this._experiencePoints === null)
       throw new Error('Character experiencePoints cannot be null');
@@ -54,9 +57,9 @@ export default class Character {
       userId: this._userId,
       name: this._name,
       level: this._level,
-      raceId: this._raceId,
-      subraceId: this._subraceId,
-      backgroundId: this._backgroundId,
+      race: this._race,
+      subrace: this._subrace,
+      background: this._background,
       alignment: this._alignment,
       experiencePoints: this._experiencePoints,
       maxHitPoints: this._maxHitPoints,
