@@ -37,3 +37,15 @@ variable "default_user" {
   sensitive = true
   default   = null
 }
+
+variable "enable_post_confirmation" {
+  description = "Whether to wire a post-confirmation trigger Lambda"
+  type        = bool
+  default     = false
+}
+
+variable "post_confirmation_lambda_arn" {
+  description = "Optional Lambda ARN to invoke after Cognito user confirmation"
+  type        = string
+  default     = null
+}

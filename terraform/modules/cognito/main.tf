@@ -21,6 +21,13 @@ resource "aws_cognito_user_pool" "this" {
 
   mfa_configuration = "OFF"
 
+  dynamic "lambda_config" {
+    for_each = var.enable_post_confirmation ? { post_confirmation = var.post_confirmation_lambda_arn } : {}
+    content {
+      post_confirmation = lambda_config.value
+    }
+  }
+
   account_recovery_setting {
     recovery_mechanism {
       name     = "verified_email"
@@ -75,6 +82,15 @@ resource "aws_cognito_user" "default" {
   }
 
   message_action = "SUPPRESS"
+}
+
+resource "aws_lambda_permission" "post_confirmation" {
+  for_each      = var.enable_post_confirmation ? { post_confirmation = var.post_confirmation_lambda_arn } : {}
+  statement_id  = "AllowCognitoPostConfirmation"
+  action        = "lambda:InvokeFunction"
+  function_name = each.value
+  principal     = "cognito-idp.amazonaws.com"
+  source_arn    = aws_cognito_user_pool.this.arn
 }
 
 locals {

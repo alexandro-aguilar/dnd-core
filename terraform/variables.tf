@@ -71,6 +71,12 @@ variable "enable_cognito_authorizer" {
   default     = true
 }
 
+variable "enable_cognito_post_confirmation" {
+  description = "Wire Cognito post-confirmation trigger to sync users into the database."
+  type        = bool
+  default     = true
+}
+
 variable "api_default_authorization_type" {
   description = "Default authorization type applied to all routes (use NONE to bypass auth)."
   type        = string

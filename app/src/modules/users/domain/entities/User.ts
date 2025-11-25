@@ -44,4 +44,8 @@ export default class User {
   get name(): string {
     return this._name;
   }
+
+  get passwordHash(): string {
+    return this._passwordHash;
+  }
 }
