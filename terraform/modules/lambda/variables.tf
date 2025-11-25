@@ -16,8 +16,10 @@ variable "lambda_configs" {
     environment   = map(string)
     layers        = list(string)
     routes = list(object({
-      method = string
-      path   = string
+      method             = string
+      path               = string
+      authorization_type = optional(string)
+      authorizer_id      = optional(string)
     }))
   }))
 }

@@ -18,6 +18,7 @@ provider "aws" {
       iam            = lookup(var.localstack_endpoints, "iam", null)
       lambda         = lookup(var.localstack_endpoints, "lambda", null)
       s3             = lookup(var.localstack_endpoints, "s3", null)
+      cognitoidp     = lookup(var.localstack_endpoints, "cognitoidp", null)
       sts            = lookup(var.localstack_endpoints, "sts", null)
     }
   }

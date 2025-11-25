@@ -22,3 +22,18 @@ output "api_gateway_id" {
   description = "API Gateway ID."
   value       = module.apigateway.api_gateway_id
 }
+
+output "cognito_user_pool_id" {
+  description = "ID of the Cognito user pool."
+  value       = module.cognito.user_pool_id
+}
+
+output "cognito_user_pool_client_id" {
+  description = "ID of the Cognito user pool client."
+  value       = module.cognito.user_pool_client_id
+}
+
+output "cognito_user_pool_issuer" {
+  description = "Issuer URL for Cognito JWT validation."
+  value       = module.cognito.user_pool_issuer
+}

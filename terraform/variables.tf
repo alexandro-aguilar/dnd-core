@@ -43,6 +43,7 @@ variable "localstack_endpoints" {
     lambda         = "http://localhost:4566"
     logs           = "http://localhost:4566"
     s3             = "http://localhost:4566"
+    cognitoidp     = "http://localhost:4566"
     sts            = "http://localhost:4566"
   }
 }
@@ -64,6 +65,47 @@ variable "create_apigateway" {
   default     = true
 }
 
+variable "enable_cognito_authorizer" {
+  description = "Create Cognito resources and wire a JWT authorizer into API Gateway."
+  type        = bool
+  default     = true
+}
+
+variable "api_default_authorization_type" {
+  description = "Default authorization type applied to all routes (use NONE to bypass auth)."
+  type        = string
+  default     = null
+}
+
+variable "cognito_client_generate_secret" {
+  description = "Whether the Cognito user pool client should generate a secret."
+  type        = bool
+  default     = false
+}
+
+variable "cognito_client_callback_urls" {
+  description = "Callback URLs for the Cognito user pool client."
+  type        = list(string)
+  default     = []
+}
+
+variable "cognito_client_logout_urls" {
+  description = "Logout URLs for the Cognito user pool client."
+  type        = list(string)
+  default     = []
+}
+
+variable "cognito_default_user" {
+  description = "Optional default user to seed into the Cognito user pool."
+  type = object({
+    username = string
+    password = string
+    email    = string
+  })
+  sensitive = true
+  default   = null
+}
+
 variable "lambda_functions" {
   description = "Map of Lambda definitions keyed by logical function name."
   type = map(object({
@@ -77,8 +119,10 @@ variable "lambda_functions" {
     environment   = optional(map(string))
     layers        = optional(list(string))
     routes = optional(list(object({
-      method = string
-      path   = string
+      method             = string
+      path               = string
+      authorization_type = optional(string)
+      authorizer_id      = optional(string)
     })), [])
   }))
   default = {}

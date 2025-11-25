@@ -6,12 +6,10 @@ import { APIGatewayProxyEventV2, APIGatewayProxyResultV2, Context } from 'aws-la
 import { container } from '../../config/container';
 import { types } from '../../config/types';
 import { requestHandler } from '@src/core/middleware/requestHandler';
-import { requestValidator } from '@src/core/middleware/requestValidator';
 import { responseHandler } from '@src/core/middleware/responseHandler';
 import ILogger from '@src/core/utils/ILogger';
 import MetricsService from '@src/core/utils/MetricsService';
 import TracerService from '@src/core/utils/TracerService';
-import { inputGetUsersSchema } from './inputGetUsersSchema';
 import GetUsersController from '../controllers/GetUsersController';
 import UserDto from '../../domain/dtos/UserDto';
 
@@ -29,7 +27,6 @@ export const handler = middy(
     return response;
   }
 )
-  .use(requestValidator(inputGetUsersSchema))
   .use(requestHandler(metrics))
   .use(
     logMetrics(metrics, {

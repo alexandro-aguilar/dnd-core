@@ -16,5 +16,6 @@ localstack_endpoints = {
   lambda         = "http://localhost:4566"
   logs           = "http://localhost:4566"
   s3             = "http://localhost:4566"
+  cognitoidp     = "http://localhost:4566"
   sts            = "http://localhost:4566"
 }

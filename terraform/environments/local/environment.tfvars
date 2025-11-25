@@ -11,6 +11,12 @@ use_localstack = true
 # Development-friendly settings
 log_retention_in_days = 1
 
+cognito_default_user = {
+  username = "admin@dnd.local"
+  email    = "admin@dnd.local"
+  password = "Admin1234!"
+}
+
 # Use Terraform's path functions for dynamic absolute path resolution
 # base_absolute_path will be calculated dynamically using abspath() in locals
 

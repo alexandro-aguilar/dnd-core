@@ -2,10 +2,135 @@
   "info": {
     "name": "DnD Core API",
     "_postman_id": "8a0f4b6c-dndc-4747-9c5b-collection",
-    "description": "Collection covering every REST endpoint exposed by the DnD Terraform project. Update the `baseUrl` variable to match your deployed API Gateway endpoint or LocalStack invoke URL before sending requests.",
+    "description": "Collection covering every REST endpoint exposed by the DnD Terraform project. Update the `base_url` variable to match your deployed API Gateway endpoint or LocalStack invoke URL before sending requests.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
   "item": [
+    {
+      "name": "Auth",
+      "auth": {
+        "type": "noauth"
+      },
+      "item": [
+        {
+          "name": "Cognito Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.1"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSCognitoIdentityProviderService.SignUp"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ClientId\": \"{{cognito_client_id}}\",\n  \"Username\": \"{{cognito_username}}\",\n  \"Password\": \"{{cognito_password}}\",\n  \"UserAttributes\": [\n    {\n      \"Name\": \"email\",\n      \"Value\": \"{{cognito_username}}\"\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{cognito_endpoint}}/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4566",
+              "path": [""]
+            },
+            "description": "Creates a Cognito user in the local pool. Retrieve the confirmation code from your chosen delivery method (email/SNS) before running Confirm Sign Up."
+          },
+          "response": []
+        },
+        {
+          "name": "Cognito Confirm Sign Up",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.1"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSCognitoIdentityProviderService.ConfirmSignUp"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ClientId\": \"{{cognito_client_id}}\",\n  \"Username\": \"{{cognito_username}}\",\n  \"ConfirmationCode\": \"{{cognito_confirmation_code}}\"\n}"
+            },
+            "url": {
+              "raw": "{{cognito_endpoint}}/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4566",
+              "path": [""]
+            },
+            "description": "Confirms a newly created user with the code sent by Cognito so that they can sign in."
+          },
+          "response": []
+        },
+        {
+          "name": "Cognito Sign In (USER_PASSWORD_AUTH)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-amz-json-1.1"
+              },
+              {
+                "key": "X-Amz-Target",
+                "value": "AWSCognitoIdentityProviderService.InitiateAuth"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"AuthFlow\": \"USER_PASSWORD_AUTH\",\n  \"ClientId\": \"{{cognito_client_id}}\",\n  \"AuthParameters\": {\n    \"USERNAME\": \"{{cognito_username}}\",\n    \"PASSWORD\": \"{{cognito_password}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{cognito_endpoint}}/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "4566",
+              "path": [""]
+            },
+            "description": "Initiates USER_PASSWORD_AUTH against the Cognito user pool client. Update the client id and credentials, send, then copy the IdToken from the response to use as the Authorization bearer token for API calls."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let body = {};",
+                  "try { body = pm.response.json(); } catch (e) { body = {}; }",
+                  "const idToken = body.AuthenticationResult && body.AuthenticationResult.IdToken;",
+                  "if (idToken) {",
+                  "  pm.environment.set('token', idToken);",
+                  "  pm.test('IdToken captured to environment variable', function () { pm.expect(idToken).to.be.a('string'); });",
+                  "} else {",
+                  "  pm.environment.unset('token');",
+                  "  pm.test('IdToken not present in response', function () { pm.expect(false).to.be.true; });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
     {
       "name": "Example",
       "item": [
@@ -15,8 +140,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/example",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/example",
+              "host": ["{{base_url}}"],
               "path": ["example"]
             },
             "description": "Smoke test lambda defined in `app/src/modules/example`."
@@ -34,8 +159,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/classes",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/classes",
+              "host": ["{{base_url}}"],
               "path": ["classes"]
             },
             "description": "Returns every class from `DrizzleClassesRepository`."
@@ -53,8 +178,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/races",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/races",
+              "host": ["{{base_url}}"],
               "path": ["races"]
             },
             "description": "Lists all races served by `DrizzleRacesRepository`."
@@ -67,8 +192,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/subraces",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/subraces",
+              "host": ["{{base_url}}"],
               "path": ["subraces"]
             },
             "description": "Lists every subrace sourced from the `subraces` table."
@@ -86,8 +211,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/subclasses",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/subclasses",
+              "host": ["{{base_url}}"],
               "path": ["subclasses"]
             },
             "description": "Returns subclasses with their parent class references."
@@ -105,8 +230,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/backgrounds",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/backgrounds",
+              "host": ["{{base_url}}"],
               "path": ["backgrounds"]
             },
             "description": "Retrieves character backgrounds and their features."
@@ -124,8 +249,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/abilities",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/abilities",
+              "host": ["{{base_url}}"],
               "path": ["abilities"]
             },
             "description": "Retrieves ability list (code + name) from the abilities table."
@@ -143,8 +268,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/users",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
               "path": ["users"]
             },
             "description": "Retrieves all users from the citadel_admin.users table."
@@ -162,8 +287,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/skills",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/skills",
+              "host": ["{{base_url}}"],
               "path": ["skills"]
             },
             "description": "Returns every skill and the ability it references."
@@ -181,8 +306,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/items",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/items",
+              "host": ["{{base_url}}"],
               "path": ["items"]
             },
             "description": "Retrieves all items including optional weight and cost values."
@@ -200,8 +325,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/spells",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/spells",
+              "host": ["{{base_url}}"],
               "path": ["spells"]
             },
             "description": "Retrieves all spells including casting details and descriptions."
@@ -219,8 +344,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/characters",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/characters",
+              "host": ["{{base_url}}"],
               "path": ["characters"]
             },
             "description": "Retrieves every character record with core stats and references."
@@ -233,8 +358,8 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/characters/{{characterId}}",
-              "host": ["{{baseUrl}}"],
+              "raw": "{{base_url}}/characters/{{characterId}}",
+              "host": ["{{base_url}}"],
               "path": ["characters", "{{characterId}}"]
             },
             "description": "Retrieves a single character by its id."
@@ -246,8 +371,53 @@
   ],
   "variable": [
     {
-      "key": "baseUrl",
+      "key": "base_url",
       "value": "https://api.example.com/dev",
+      "type": "string"
+    },
+    {
+      "key": "cognito_endpoint",
+      "value": "http://localhost:4566",
+      "type": "string"
+    },
+    {
+      "key": "cognito_region",
+      "value": "us-east-1",
+      "type": "string"
+    },
+    {
+      "key": "cognito_client_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cognito_username",
+      "value": "admin@dnd.local",
+      "type": "string"
+    },
+    {
+      "key": "cognito_password",
+      "value": "Admin1234!",
+      "type": "string"
+    },
+    {
+      "key": "aws_access_key",
+      "value": "test",
+      "type": "string"
+    },
+    {
+      "key": "aws_secret_key",
+      "value": "test",
+      "type": "string"
+    },
+    {
+      "key": "cognito_idp_host",
+      "value": "cognito-idp.us-east-1.localhost.localstack.cloud:4566",
+      "type": "string"
+    },
+    {
+      "key": "cognito_gateway_url",
+      "value": "http://cognito-idp.us-east-1.localhost.localstack.cloud:4566",
       "type": "string"
     }
   ]

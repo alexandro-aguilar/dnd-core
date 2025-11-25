@@ -31,16 +31,34 @@ module "lambda" {
   hot_reload_bucket     = var.use_localstack ? aws_s3_bucket.hot_reload[0].bucket : ""
 }
 
+module "cognito" {
+  source = "./modules/cognito"
+
+  name_prefix            = local.name_prefix
+  common_tags            = local.common_tags
+  client_generate_secret = var.cognito_client_generate_secret
+  client_callback_urls   = var.cognito_client_callback_urls
+  client_logout_urls     = var.cognito_client_logout_urls
+  default_user           = var.cognito_default_user
+}
+
 # API Gateway Module - Handles all API Gateway resources
 module "apigateway" {
   source = "./modules/apigateway"
 
-  name_prefix           = local.name_prefix
-  lambda_functions      = module.lambda.lambda_functions
-  api_routes            = local.api_routes
-  create_apigateway     = var.create_apigateway
-  log_retention_in_days = var.log_retention_in_days
-  common_tags           = local.common_tags
+  name_prefix                = local.name_prefix
+  lambda_functions           = module.lambda.lambda_functions
+  api_routes                 = local.api_routes
+  create_apigateway          = var.create_apigateway
+  log_retention_in_days      = var.log_retention_in_days
+  common_tags                = local.common_tags
+  default_authorization_type = local.default_route_authorization_type
+  jwt_authorizer = var.enable_cognito_authorizer ? {
+    name             = "${local.name_prefix}-cognito"
+    issuer           = module.cognito.user_pool_issuer
+    audience         = [module.cognito.user_pool_client_id]
+    identity_sources = ["$request.header.Authorization"]
+  } : null
 }
 
 # resource "aws_lambda_function" "my_hot_reload_lambda" {

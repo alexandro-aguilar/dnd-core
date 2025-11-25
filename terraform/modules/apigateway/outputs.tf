@@ -22,3 +22,8 @@ output "stage_invoke_url" {
   description = "Stage invoke URL"
   value       = var.create_apigateway ? "${aws_apigatewayv2_api.http_api.api_endpoint}/" : null
 }
+
+output "jwt_authorizer_id" {
+  description = "ID of the JWT authorizer when created"
+  value       = var.jwt_authorizer != null && var.create_apigateway ? aws_apigatewayv2_authorizer.jwt[0].id : null
+}

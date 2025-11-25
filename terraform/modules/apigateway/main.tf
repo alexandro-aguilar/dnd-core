@@ -5,6 +5,20 @@ resource "aws_apigatewayv2_api" "http_api" {
   tags = var.common_tags
 }
 
+resource "aws_apigatewayv2_authorizer" "jwt" {
+  count = var.jwt_authorizer != null && var.create_apigateway ? 1 : 0
+
+  api_id           = aws_apigatewayv2_api.http_api.id
+  authorizer_type  = "JWT"
+  identity_sources = coalesce(try(var.jwt_authorizer.identity_sources, null), ["$request.header.Authorization"])
+  name             = try(var.jwt_authorizer.name, null)
+
+  jwt_configuration {
+    audience = try(var.jwt_authorizer.audience, [])
+    issuer   = try(var.jwt_authorizer.issuer, null)
+  }
+}
+
 resource "aws_apigatewayv2_integration" "lambda" {
   for_each = var.lambda_functions
 
@@ -22,6 +36,9 @@ resource "aws_apigatewayv2_route" "routes" {
   api_id    = aws_apigatewayv2_api.http_api.id
   route_key = "${each.value.method} ${each.value.path}"
   target    = "integrations/${aws_apigatewayv2_integration.lambda[each.value.function_key].id}"
+
+  authorization_type = coalesce(lookup(each.value, "authorization_type", null), var.default_authorization_type)
+  authorizer_id      = coalesce(lookup(each.value, "authorization_type", null), var.default_authorization_type) == "JWT" ? coalesce(lookup(each.value, "authorizer_id", null), try(aws_apigatewayv2_authorizer.jwt[0].id, null)) : null
 }
 
 resource "aws_cloudwatch_log_group" "api_gw" {

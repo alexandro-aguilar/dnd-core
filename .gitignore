@@ -5,6 +5,7 @@ node_modules
 .dist/
 volume/
 !commitlint.config.js
+.vscode/
 
 .env
 
