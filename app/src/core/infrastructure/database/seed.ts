@@ -2,7 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { AnyPgTable } from 'drizzle-orm/pg-core';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Client } from 'pg';
-import * as schema from '../app/src/core/infrastructure/database/schema';
+import * as schema from './schema';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -25,6 +25,8 @@ const {
   subraces,
   users,
 } = schema;
+
+const ZERO_UUID = '00000000-0000-0000-0000-000000000000';
 
 const userIds = {
   aelar: randomUUID(),
@@ -165,6 +167,7 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const raceData = [
+    { id: ZERO_UUID, name: 'Unknown Race', baseSpeed: 0, size: 'Unknown' },
     { id: raceIds.human, name: 'Human', baseSpeed: 30, size: 'Medium' },
     { id: raceIds.elf, name: 'Elf', baseSpeed: 30, size: 'Medium' },
     { id: raceIds.dwarf, name: 'Dwarf', baseSpeed: 25, size: 'Medium' },
@@ -172,6 +175,7 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const subraceData = [
+    { id: ZERO_UUID, raceId: ZERO_UUID, name: 'Unknown Subrace' },
     { id: subraceIds.highElf, raceId: raceIds.elf, name: 'High Elf' },
     { id: subraceIds.woodElf, raceId: raceIds.elf, name: 'Wood Elf' },
     { id: subraceIds.mountainDwarf, raceId: raceIds.dwarf, name: 'Mountain Dwarf' },
@@ -179,12 +183,20 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const backgroundData = [
+    { id: ZERO_UUID, name: 'Unknown Background', feature: 'N/A' },
     { id: backgroundIds.sage, name: 'Sage', feature: 'Researcher' },
     { id: backgroundIds.soldier, name: 'Soldier', feature: 'Military Rank' },
     { id: backgroundIds.acolyte, name: 'Acolyte', feature: 'Shelter of the Faithful' },
   ];
 
   const classData = [
+    {
+      id: ZERO_UUID,
+      name: 'Unknown Class',
+      hitDie: 'd0',
+      primaryAbility: 'UNK',
+      spellcastingAbility: null,
+    },
     {
       id: classIds.fighter,
       name: 'Fighter',
@@ -224,6 +236,12 @@ async function seed(db: NodePgDatabase<typeof schema>) {
 
   const subclassData = [
     {
+      id: ZERO_UUID,
+      classId: ZERO_UUID,
+      name: 'Unknown Subclass',
+      description: 'Placeholder subclass for uncategorized entries.',
+    },
+    {
       id: subclassIds.evocation,
       classId: classIds.wizard,
       name: 'School of Evocation',
@@ -250,6 +268,7 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const abilityData = [
+    { id: ZERO_UUID, code: 'UNK', name: 'Unknown Ability' },
     { id: abilityIds.str, code: 'STR', name: 'Strength' },
     { id: abilityIds.dex, code: 'DEX', name: 'Dexterity' },
     { id: abilityIds.con, code: 'CON', name: 'Constitution' },
@@ -259,6 +278,7 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const skillData = [
+    { id: ZERO_UUID, name: 'Unknown Skill', abilityId: ZERO_UUID },
     { id: skillIds.acrobatics, name: 'Acrobatics', abilityId: abilityIds.dex },
     { id: skillIds.animalHandling, name: 'Animal Handling', abilityId: abilityIds.wis },
     { id: skillIds.arcana, name: 'Arcana', abilityId: abilityIds.int },
@@ -280,6 +300,7 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const itemData = [
+    { id: ZERO_UUID, name: 'Unknown Item', type: 'Unknown', weight: null, cost: null },
     { id: itemIds.longsword, name: 'Longsword', type: 'Weapon', weight: '3', cost: '15' },
     { id: itemIds.shield, name: 'Shield', type: 'Armor', weight: '6', cost: '10' },
     // eslint-disable-next-line quotes
@@ -292,6 +313,18 @@ async function seed(db: NodePgDatabase<typeof schema>) {
   ];
 
   const spellData = [
+    {
+      id: ZERO_UUID,
+      name: 'Unknown Spell',
+      level: 0,
+      school: 'Unknown',
+      castingTime: 'N/A',
+      range: 'Self',
+      components: 'N/A',
+      duration: 'Instantaneous',
+      concentration: false,
+      description: 'Placeholder spell.',
+    },
     {
       id: spellIds.fireBolt,
       name: 'Fire Bolt',

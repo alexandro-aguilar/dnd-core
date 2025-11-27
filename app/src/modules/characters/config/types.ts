@@ -10,4 +10,8 @@ export const types = {
   GetCharacterByIdController: Symbol.for('GetCharacterByIdController'),
   GetCharacterByIdQueryHandler: Symbol.for('GetCharacterByIdQueryHandler'),
   // endregion
+  // region PostCharacter
+  PostCharacterController: Symbol.for('PostCharacterController'),
+  CreateCharacterCommandHandler: Symbol.for('CreateCharacterCommandHandler'),
+  // endregion
 };

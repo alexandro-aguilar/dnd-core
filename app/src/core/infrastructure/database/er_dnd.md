@@ -15,7 +15,7 @@ erDiagram
     varchar name
     int level
     uuid race_id FK
-    uuid subrace_id FK
+    uuid subrace_id FK NOT NULL
     uuid background_id FK
     varchar alignment
     int experience_points
@@ -144,7 +144,7 @@ erDiagram
 
   RACE ||--o{ SUBRACE : "has"
   RACE ||--o{ CHARACTER : "is race of"
-  SUBRACE ||--o{ CHARACTER : "is subrace of"
+  SUBRACE ||--|{ CHARACTER : "is subrace of"
 
   BACKGROUND ||--o{ CHARACTER : "is background of"
 

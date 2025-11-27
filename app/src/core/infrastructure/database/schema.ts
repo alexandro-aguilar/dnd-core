@@ -9,7 +9,6 @@ export const users = citadelAdmin.table(
     id: uuid('id').defaultRandom().primaryKey(),
     email: text('email').notNull(),
     name: text('name').notNull(),
-    passwordHash: text('password_hash').notNull(),
   },
   (table) => [uniqueIndex('users_email_idx').on(table.email)]
 );
@@ -97,7 +96,9 @@ export const characters = arcaneCodex.table('characters', {
   raceId: uuid('race_id')
     .notNull()
     .references(() => races.id),
-  subraceId: uuid('subrace_id').references(() => subraces.id),
+  subraceId: uuid('subrace_id')
+    .references(() => subraces.id)
+    .notNull(),
   backgroundId: uuid('background_id')
     .notNull()
     .references(() => backgrounds.id),

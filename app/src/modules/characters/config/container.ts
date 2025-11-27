@@ -9,6 +9,8 @@ import DrizzleCharactersRepository from '../infrastructure/repositories/DrizzleC
 import GetCharactersController from '../interface/controllers/GetCharactersController';
 import GetCharacterByIdController from '../interface/controllers/GetCharacterByIdController';
 import GetCharacterByIdQueryHandler from '../application/handlers/GetCharacterByIdQueryHandler';
+import CreateCharacterCommandHandler from '../application/handlers/CreateCharacterCommandHandler';
+import PostCharacterController from '../interface/controllers/PostCharacterController';
 
 export const container = new Container();
 
@@ -22,4 +24,8 @@ container.bind<GetCharactersController>(types.GetCharactersController).to(GetCha
 //region GetCharacterById
 container.bind<GetCharacterByIdController>(types.GetCharacterByIdController).to(GetCharacterByIdController);
 container.bind<GetCharacterByIdQueryHandler>(types.GetCharacterByIdQueryHandler).to(GetCharacterByIdQueryHandler);
+// endregion
+// region PostCharacter
+container.bind<PostCharacterController>(types.PostCharacterController).to(PostCharacterController);
+container.bind<CreateCharacterCommandHandler>(types.CreateCharacterCommandHandler).to(CreateCharacterCommandHandler);
 // endregion

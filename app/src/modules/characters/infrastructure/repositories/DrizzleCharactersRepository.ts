@@ -78,4 +78,60 @@ export default class DrizzleCharactersRepository implements CharactersRepository
       throw error;
     }
   }
+
+  async create(character: Character): Promise<Character> {
+    try {
+      this.logger.info('Creating new character in DrizzleCharactersRepository', { character });
+
+      const [created] = await db
+        .insert(charactersTable)
+        .values({
+          userId: character.user as string,
+          name: character.name,
+          level: character.level,
+          raceId: character.race as string,
+          subraceId: character.subrace as string,
+          backgroundId: character.background as string,
+          alignment: character.alignment,
+          experiencePoints: character.experiencePoints,
+          maxHitPoints: character.maxHitPoints,
+          currentHitPoints: character.currentHitPoints,
+          temporaryHitPoints: character.temporaryHitPoints,
+          armorClass: character.armorClass,
+          speed: character.speed,
+          inspiration: character.inspiration,
+          personalityTraits: character.personalityTraits,
+          ideals: character.ideals,
+          bonds: character.bonds,
+          flaws: character.flaws,
+        })
+        .returning()
+        .execute();
+
+      return new Character(
+        created.id,
+        created.userId,
+        created.name,
+        created.level,
+        created.raceId,
+        created.subraceId ?? null,
+        created.backgroundId,
+        created.alignment,
+        created.experiencePoints,
+        created.maxHitPoints,
+        created.currentHitPoints,
+        created.temporaryHitPoints,
+        created.armorClass,
+        created.speed,
+        created.inspiration,
+        created.personalityTraits ?? null,
+        created.ideals ?? null,
+        created.bonds ?? null,
+        created.flaws ?? null
+      );
+    } catch (error) {
+      this.logger.error('Error creating new character in database', { error });
+      throw error;
+    }
+  }
 }

@@ -1,14 +1,15 @@
 import Background from '@src/modules/backgrounds/domain/entities/Background';
 import Race from '@src/modules/races/domain/entities/Race';
 import Subrace from '@src/modules/subraces/domain/entities/Subrace';
+import User from '@src/modules/users/domain/entities/User';
 
 export default interface CharacterDto {
   id: string;
-  userId: string;
+  user: string | User;
   name: string;
   level: number;
   race: string | Race;
-  subrace?: string | null | Subrace;
+  subrace: string | Subrace;
   background: string | Background;
   alignment: string;
   experiencePoints: number;

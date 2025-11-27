@@ -1,4 +1,3 @@
-// @ts-expect-error
 import { MiddlewareObj } from '@middy/core';
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { Metrics } from '@aws-lambda-powertools/metrics';

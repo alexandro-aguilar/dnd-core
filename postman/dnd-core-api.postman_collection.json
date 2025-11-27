@@ -119,9 +119,21 @@
                   "const idToken = body.AuthenticationResult && body.AuthenticationResult.IdToken;",
                   "if (idToken) {",
                   "  pm.environment.set('token', idToken);",
+                  "  try {",
+                  "    const payload = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64').toString('utf8'));",
+                  "    const userId = payload && payload.sub;",
+                  "    if (userId) {",
+                  "      pm.environment.set('user_id', userId);",
+                  "    } else {",
+                  "      pm.environment.unset('user_id');",
+                  "    }",
+                  "  } catch (e) {",
+                  "    pm.environment.unset('user_id');",
+                  "  }",
                   "  pm.test('IdToken captured to environment variable', function () { pm.expect(idToken).to.be.a('string'); });",
                   "} else {",
                   "  pm.environment.unset('token');",
+                  "  pm.environment.unset('user_id');",
                   "  pm.test('IdToken not present in response', function () { pm.expect(false).to.be.true; });",
                   "}"
                 ]
@@ -349,6 +361,29 @@
               "path": ["characters"]
             },
             "description": "Retrieves every character record with core stats and references."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Character",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Aria Nightbreeze\",\n  \"level\": 1,\n  \"raceId\": \"{{raceId}}\",\n  \"subraceId\": \"{{subraceId}}\",\n  \"backgroundId\": \"{{backgroundId}}\",\n  \"alignment\": \"Neutral Good\",\n  \"experiencePoints\": 0,\n  \"maxHitPoints\": 12,\n  \"currentHitPoints\": 12,\n  \"temporaryHitPoints\": 0,\n  \"armorClass\": 14,\n  \"speed\": 30,\n  \"inspiration\": false,\n  \"personalityTraits\": \"Curious and careful\",\n  \"ideals\": \"Knowledge is power\",\n  \"bonds\": \"Owes a debt to a mentor\",\n  \"flaws\": \"Overthinks in combat\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/characters",
+              "host": ["{{base_url}}"],
+              "path": ["characters"]
+            },
+            "description": "Creates a new character. Requires bearer token; fill in valid raceId, subraceId, backgroundId."
           },
           "response": []
         },
