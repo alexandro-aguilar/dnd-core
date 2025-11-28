@@ -24,7 +24,3 @@ output "user_pool_issuer" {
   value       = local.issuer
 }
 
-output "default_user_username" {
-  description = "Username of the default seeded user, if created"
-  value       = var.default_user == null ? null : var.default_user.username
-}

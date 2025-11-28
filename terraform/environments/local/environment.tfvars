@@ -11,12 +11,6 @@ use_localstack = true
 # Development-friendly settings
 log_retention_in_days = 1
 
-cognito_default_user = {
-  username = "admin@dnd.local"
-  email    = "admin@dnd.local"
-  password = "Admin1234!"
-}
-
 # Use Terraform's path functions for dynamic absolute path resolution
 # base_absolute_path will be calculated dynamically using abspath() in locals
 
@@ -389,5 +383,37 @@ lambda_functions = {
       DB_NAME                 = "dnd-core"
     }
     routes = []
+  }
+
+  postCharacter = {
+    source_file   = "../.dist/postCharacterHandler.js"
+    handler       = "postCharacterHandler.handler"
+    runtime       = "nodejs22.x"
+    description   = "Creates a new character"
+    memory_size   = 1024
+    timeout       = 10
+    architectures = ["arm64"]
+    layers        = []
+    environment = {
+      NODE_ENV                = "local"
+      LOG_LEVEL               = "debug"
+      LOCALSTACK_HOSTNAME     = "localhost"
+      STAGE                   = "local"
+      OPENAI_API_KEY          = ""
+      POWERTOOLS_SERVICE_NAME = "dnd-core-postCharacter"
+      POWERTOOLS_LOG_LEVEL    = "INFO"
+      PROJECT_NAME            = "DnD"
+      DB_HOST                 = "postgres_dnd-core_db"
+      DB_PORT                 = "5432"
+      DB_USER                 = "postgres"
+      DB_PASSWORD             = "postgres"
+      DB_NAME                 = "dnd-core"
+    }
+    routes = [
+      {
+        method = "POST"
+        path   = "/characters"
+      }
+    ]
   }
 }

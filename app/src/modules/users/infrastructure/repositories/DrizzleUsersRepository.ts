@@ -16,7 +16,7 @@ export default class DrizzleUsersRepository implements UsersRepository {
     const dbUsers = await db.select().from(usersTable);
     this.logger.info(`Found ${dbUsers.length} users`);
 
-    return dbUsers.map((user) => new User(user.id, user.email, user.name, user.passwordHash));
+    return dbUsers.map((user) => new User(user.id, user.email, user.name));
   }
 
   async create(user: User): Promise<User> {
@@ -27,7 +27,6 @@ export default class DrizzleUsersRepository implements UsersRepository {
         id: user.id,
         email: user.email,
         name: user.name,
-        passwordHash: user.passwordHash,
       })
       .onConflictDoNothing({ target: usersTable.email })
       .returning();
@@ -36,11 +35,11 @@ export default class DrizzleUsersRepository implements UsersRepository {
       this.logger.warn('User already exists, skipping insert', { email: user.email });
       const [existingUser] = await db.select().from(usersTable).where(eq(usersTable.email, user.email)).limit(1);
       if (existingUser) {
-        return new User(existingUser.id, existingUser.email, existingUser.name, existingUser.passwordHash);
+        return new User(existingUser.id, existingUser.email, existingUser.name);
       }
       return user;
     }
 
-    return new User(createdUser.id, createdUser.email, createdUser.name, createdUser.passwordHash);
+    return new User(createdUser.id, createdUser.email, createdUser.name);
   }
 }

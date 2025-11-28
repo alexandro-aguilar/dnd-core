@@ -15,6 +15,13 @@
       "when": 1764207801835,
       "tag": "0001_wise_dragon_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764353558212,
+      "tag": "0002_petite_namora",
+      "breakpoints": true
     }
   ]
 }

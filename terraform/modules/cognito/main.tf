@@ -69,21 +69,6 @@ resource "aws_cognito_user_pool_client" "this" {
   refresh_token_validity = 30
 }
 
-resource "aws_cognito_user" "default" {
-  count = var.default_user == null ? 0 : 1
-
-  user_pool_id = aws_cognito_user_pool.this.id
-  username     = var.default_user.username
-  password     = var.default_user.password
-
-  attributes = {
-    email          = var.default_user.email
-    email_verified = "true"
-  }
-
-  message_action = "SUPPRESS"
-}
-
 resource "aws_lambda_permission" "post_confirmation" {
   for_each      = var.enable_post_confirmation ? { post_confirmation = var.post_confirmation_lambda_arn } : {}
   statement_id  = "AllowCognitoPostConfirmation"

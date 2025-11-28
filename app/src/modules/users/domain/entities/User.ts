@@ -4,8 +4,7 @@ export default class User {
   constructor(
     private readonly _id: string,
     private readonly _email: string,
-    private readonly _name: string,
-    private readonly _passwordHash: string
+    private readonly _name: string
   ) {
     this.validate();
   }
@@ -19,9 +18,6 @@ export default class User {
     }
     if (!this._name) {
       throw new Error('User name cannot be null or undefined');
-    }
-    if (!this._passwordHash) {
-      throw new Error('User passwordHash cannot be null or undefined');
     }
   }
 
@@ -43,9 +39,5 @@ export default class User {
 
   get name(): string {
     return this._name;
-  }
-
-  get passwordHash(): string {
-    return this._passwordHash;
   }
 }

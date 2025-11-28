@@ -19,6 +19,7 @@ export default class PostCharacterController {
   ): Promise<APIGatewayProxyResultV2> {
     const authHeader = event.headers.Authorization || event.headers.authorization;
     const claims = decodeBearerToken(authHeader);
+    this.logger.info('Decoded JWT claims', { claims });
     const userId = claims.sub;
     if (!userId) {
       throw new Error('Missing subject in JWT');

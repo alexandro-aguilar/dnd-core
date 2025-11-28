@@ -47,8 +47,9 @@
     "workspace:list": "terraform -chdir=terraform workspace list",
     "generate:local": "drizzle-kit generate",
     "migrate:local": "drizzle-kit migrate",
-    "seed:local": "ts-node scripts/seed.ts seed",
-    "clean:local": "ts-node scripts/seed.ts clean"
+    "seed:local": "ts-node app/src/core/infrastructure/database/seed.ts seed",
+    "clean:local": "ts-node app/src/core/infrastructure/database/seed.ts clean",
+    "create:cognito-user": "bash scripts/signUpAndConfirmCognitoUser.sh"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",

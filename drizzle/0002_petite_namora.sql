@@ -1,0 +1,1 @@
+ALTER TABLE "citadel_admin"."users" DROP COLUMN "password_hash";

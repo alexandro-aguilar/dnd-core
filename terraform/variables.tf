@@ -101,17 +101,6 @@ variable "cognito_client_logout_urls" {
   default     = []
 }
 
-variable "cognito_default_user" {
-  description = "Optional default user to seed into the Cognito user pool."
-  type = object({
-    username = string
-    password = string
-    email    = string
-  })
-  sensitive = true
-  default   = null
-}
-
 variable "lambda_functions" {
   description = "Map of Lambda definitions keyed by logical function name."
   type = map(object({

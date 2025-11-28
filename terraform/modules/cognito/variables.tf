@@ -27,17 +27,6 @@ variable "client_logout_urls" {
   default     = []
 }
 
-variable "default_user" {
-  description = "Optional default user to seed into the user pool"
-  type = object({
-    username = string
-    password = string
-    email    = string
-  })
-  sensitive = true
-  default   = null
-}
-
 variable "enable_post_confirmation" {
   description = "Whether to wire a post-confirmation trigger Lambda"
   type        = bool

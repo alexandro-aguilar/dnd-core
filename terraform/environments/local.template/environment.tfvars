@@ -11,12 +11,6 @@ use_localstack = true
 # Development-friendly settings
 log_retention_in_days = 1
 
-cognito_default_user = {
-  username = "admin"
-  email    = "admin@dnd.local"
-  password = "Admin1234!"
-}
-
 # Override Lambda functions for LOCAL environment
 lambda_functions = {
   example = {

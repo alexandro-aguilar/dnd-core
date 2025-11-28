@@ -39,7 +39,6 @@ module "cognito" {
   client_generate_secret       = var.cognito_client_generate_secret
   client_callback_urls         = var.cognito_client_callback_urls
   client_logout_urls           = var.cognito_client_logout_urls
-  default_user                 = var.cognito_default_user
   enable_post_confirmation     = var.enable_cognito_post_confirmation
   post_confirmation_lambda_arn = try(module.lambda.lambda_function_arns["syncUserOnSignup"], null)
 }
