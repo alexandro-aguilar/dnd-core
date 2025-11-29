@@ -1,7 +1,8 @@
-import { boolean, integer, numeric, pgSchema, text, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
+import { boolean, integer, numeric, pgSchema, text, timestamp, uniqueIndex, uuid } from 'drizzle-orm/pg-core';
 
 export const citadelAdmin = pgSchema('citadel_admin');
 export const arcaneCodex = pgSchema('arcane_codex');
+export const oniricPlane = pgSchema('oniric_plane');
 
 export const users = citadelAdmin.table(
   'users',
@@ -11,6 +12,37 @@ export const users = citadelAdmin.table(
     name: text('name').notNull(),
   },
   (table) => [uniqueIndex('users_email_idx').on(table.email)]
+);
+
+export const sessions = oniricPlane.table('sessions', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  dmId: uuid('dm_id')
+    .notNull()
+    .references(() => users.id, { onDelete: 'cascade' }),
+  title: text('title').notNull(),
+  scheduledAt: timestamp('scheduled_at', { withTimezone: true }).notNull(),
+  status: text('status').notNull(), // planned|in_progress|complete
+  notes: text('notes'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const quests = oniricPlane.table(
+  'quests',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    sessionId: uuid('session_id')
+      .notNull()
+      .references(() => sessions.id, { onDelete: 'cascade' }),
+    name: text('name').notNull(),
+    summary: text('summary'),
+    status: text('status').notNull(), // not_started|active|resolved|failed
+    hook: text('hook'),
+    reward: text('reward'),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex('quests_session_id_unique').on(table.sessionId)]
 );
 
 export const races = arcaneCodex.table('races', {
@@ -86,7 +118,7 @@ export const spells = arcaneCodex.table('spells', {
   description: text('description').notNull(),
 });
 
-export const characters = arcaneCodex.table('characters', {
+export const characters = oniricPlane.table('characters', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id')
     .notNull()
@@ -114,6 +146,19 @@ export const characters = arcaneCodex.table('characters', {
   ideals: text('ideals'),
   bonds: text('bonds'),
   flaws: text('flaws'),
+});
+
+export const sessionPlayers = oniricPlane.table('session_players', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sessionId: uuid('session_id')
+    .notNull()
+    .references(() => sessions.id, { onDelete: 'cascade' }),
+  characterId: uuid('character_id')
+    .notNull()
+    .references(() => characters.id, { onDelete: 'cascade' }),
+  role: text('role').notNull(), // player|guest
+  joinedAt: timestamp('joined_at', { withTimezone: true }).defaultNow().notNull(),
+  leftAt: timestamp('left_at', { withTimezone: true }),
 });
 
 export const characterClasses = arcaneCodex.table('character_classes', {

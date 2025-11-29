@@ -1,5 +1,5 @@
 {
-  "id": "d7709af8-f93e-4db7-b136-97e21d99c7ad",
+  "id": "325e553d-c5eb-4d41-a1fc-e2beca0b000a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -104,7 +104,7 @@
           "name": "character_ability_scores_character_id_characters_id_fk",
           "tableFrom": "character_ability_scores",
           "tableTo": "characters",
-          "schemaTo": "arcane_codex",
+          "schemaTo": "oniric_plane",
           "columnsFrom": ["character_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -163,7 +163,7 @@
           "name": "character_classes_character_id_characters_id_fk",
           "tableFrom": "character_classes",
           "tableTo": "characters",
-          "schemaTo": "arcane_codex",
+          "schemaTo": "oniric_plane",
           "columnsFrom": ["character_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -246,7 +246,7 @@
           "name": "character_items_character_id_characters_id_fk",
           "tableFrom": "character_items",
           "tableTo": "characters",
-          "schemaTo": "arcane_codex",
+          "schemaTo": "oniric_plane",
           "columnsFrom": ["character_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -311,7 +311,7 @@
           "name": "character_skills_character_id_characters_id_fk",
           "tableFrom": "character_skills",
           "tableTo": "characters",
-          "schemaTo": "arcane_codex",
+          "schemaTo": "oniric_plane",
           "columnsFrom": ["character_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -382,7 +382,7 @@
           "name": "character_spells_character_id_characters_id_fk",
           "tableFrom": "character_spells",
           "tableTo": "characters",
-          "schemaTo": "arcane_codex",
+          "schemaTo": "oniric_plane",
           "columnsFrom": ["character_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
@@ -415,9 +415,9 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "arcane_codex.characters": {
+    "oniric_plane.characters": {
       "name": "characters",
-      "schema": "arcane_codex",
+      "schema": "oniric_plane",
       "columns": {
         "id": {
           "name": "id",
@@ -454,7 +454,7 @@
           "name": "subrace_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "background_id": {
           "name": "background_id",
@@ -672,6 +672,103 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "oniric_plane.quests": {
+      "name": "quests",
+      "schema": "oniric_plane",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "session_id": {
+          "name": "session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hook": {
+          "name": "hook",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reward": {
+          "name": "reward",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "quests_session_id_unique": {
+          "name": "quests_session_id_unique",
+          "columns": [
+            {
+              "expression": "session_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quests_session_id_sessions_id_fk": {
+          "name": "quests_session_id_sessions_id_fk",
+          "tableFrom": "quests",
+          "tableTo": "sessions",
+          "schemaTo": "oniric_plane",
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "arcane_codex.races": {
       "name": "races",
       "schema": "arcane_codex",
@@ -704,6 +801,153 @@
       },
       "indexes": {},
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "oniric_plane.session_players": {
+      "name": "session_players",
+      "schema": "oniric_plane",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "session_id": {
+          "name": "session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "character_id": {
+          "name": "character_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "joined_at": {
+          "name": "joined_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "left_at": {
+          "name": "left_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "session_players_session_id_sessions_id_fk": {
+          "name": "session_players_session_id_sessions_id_fk",
+          "tableFrom": "session_players",
+          "tableTo": "sessions",
+          "schemaTo": "oniric_plane",
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "session_players_character_id_characters_id_fk": {
+          "name": "session_players_character_id_characters_id_fk",
+          "tableFrom": "session_players",
+          "tableTo": "characters",
+          "schemaTo": "oniric_plane",
+          "columnsFrom": ["character_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "oniric_plane.sessions": {
+      "name": "sessions",
+      "schema": "oniric_plane",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "dm_id": {
+          "name": "dm_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduled_at": {
+          "name": "scheduled_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "sessions_dm_id_users_id_fk": {
+          "name": "sessions_dm_id_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "schemaTo": "citadel_admin",
+          "columnsFrom": ["dm_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -941,12 +1185,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "password_hash": {
-          "name": "password_hash",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
         }
       },
       "indexes": {
@@ -977,7 +1215,8 @@
   "enums": {},
   "schemas": {
     "arcane_codex": "arcane_codex",
-    "citadel_admin": "citadel_admin"
+    "citadel_admin": "citadel_admin",
+    "oniric_plane": "oniric_plane"
   },
   "sequences": {},
   "roles": {},

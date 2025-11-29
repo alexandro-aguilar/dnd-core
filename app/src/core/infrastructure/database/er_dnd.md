@@ -167,3 +167,69 @@ erDiagram
   CHARACTER ||--o{ CHARACTER_SPELL : "has spell"
   "CLASS" ||--o{ CHARACTER_SPELL : "grants spell"
 ```
+
+# Quest Control ER Diagram (Simplified)
+
+```mermaid
+erDiagram
+  USER {
+    uuid id PK
+    varchar email
+    varchar name
+    varchar role "DM|Player"
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  CHARACTER {
+    uuid id PK
+    uuid user_id FK
+    varchar name
+    varchar class
+    int level
+    varchar faction
+    varchar sheet_url
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  SESSION {
+    uuid id PK
+    uuid dm_id FK
+    varchar title
+    timestamp scheduled_at
+    varchar status "planned|in_progress|complete"
+    text notes
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  QUEST {
+    uuid id PK
+    uuid session_id FK
+    varchar name
+    text summary
+    varchar status "not_started|active|resolved|failed"
+    text hook
+    text reward
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  SESSION_PLAYER {
+    uuid id PK
+    uuid session_id FK
+    uuid character_id FK
+    varchar role "player|guest"
+    timestamp joined_at
+    timestamp left_at
+  }
+
+  USER ||--o{ CHARACTER : "owns"
+  USER ||--o{ SESSION : "DMs"
+
+  SESSION ||--|| QUEST : "has quest"
+
+  SESSION ||--o{ SESSION_PLAYER : "has party"
+  CHARACTER ||--o{ SESSION_PLAYER : "joins session"
+```

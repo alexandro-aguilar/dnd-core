@@ -1,1 +1,0 @@
-ALTER TABLE "arcane_codex"."characters" ALTER COLUMN "subrace_id" SET NOT NULL;

@@ -29,8 +29,6 @@ services:
       POSTGRES_DB: dnd-core
     networks:
       - localnet
-    volumes:
-      - postgres_data:/var/lib/postgresql
     depends_on:
       - localstack
 
@@ -39,6 +37,3 @@ networks:
     name: localnet
     driver: bridge
     external: true
-
-volumes:
-  postgres_data:
