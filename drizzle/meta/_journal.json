@@ -8,6 +8,20 @@
       "when": 1764381385602,
       "tag": "0000_worthless_shard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764384709009,
+      "tag": "0001_shiny_blockbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764443264199,
+      "tag": "0002_curvy_black_crow",
+      "breakpoints": true
     }
   ]
 }

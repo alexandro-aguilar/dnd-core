@@ -197,7 +197,6 @@ erDiagram
     uuid id PK
     uuid dm_id FK
     varchar title
-    timestamp scheduled_at
     varchar status "planned|in_progress|complete"
     text notes
     timestamp created_at
@@ -228,7 +227,7 @@ erDiagram
   USER ||--o{ CHARACTER : "owns"
   USER ||--o{ SESSION : "DMs"
 
-  SESSION ||--|| QUEST : "has quest"
+  SESSION ||--o{ QUEST : "includes"
 
   SESSION ||--o{ SESSION_PLAYER : "has party"
   CHARACTER ||--o{ SESSION_PLAYER : "joins session"

@@ -1,0 +1,1 @@
+ALTER TABLE "oniric_plane"."sessions" DROP COLUMN "scheduled_at";

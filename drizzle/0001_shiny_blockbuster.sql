@@ -1,0 +1,1 @@
+DROP INDEX "oniric_plane"."quests_session_id_unique";
