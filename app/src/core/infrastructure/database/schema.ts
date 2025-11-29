@@ -20,30 +20,25 @@ export const sessions = oniricPlane.table('sessions', {
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
   title: text('title').notNull(),
-  scheduledAt: timestamp('scheduled_at', { withTimezone: true }).notNull(),
   status: text('status').notNull(), // planned|in_progress|complete
   notes: text('notes'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const quests = oniricPlane.table(
-  'quests',
-  {
-    id: uuid('id').defaultRandom().primaryKey(),
-    sessionId: uuid('session_id')
-      .notNull()
-      .references(() => sessions.id, { onDelete: 'cascade' }),
-    name: text('name').notNull(),
-    summary: text('summary'),
-    status: text('status').notNull(), // not_started|active|resolved|failed
-    hook: text('hook'),
-    reward: text('reward'),
-    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
-  },
-  (table) => [uniqueIndex('quests_session_id_unique').on(table.sessionId)]
-);
+export const quests = oniricPlane.table('quests', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sessionId: uuid('session_id')
+    .notNull()
+    .references(() => sessions.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  summary: text('summary'),
+  status: text('status').notNull(), // not_started|active|resolved|failed
+  hook: text('hook'),
+  reward: text('reward'),
+  createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
+});
 
 export const races = arcaneCodex.table('races', {
   id: uuid('id').defaultRandom().primaryKey(),
