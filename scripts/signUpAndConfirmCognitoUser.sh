@@ -6,6 +6,10 @@ usage() {
 Usage: scripts/signUpAndConfirmCognitoUser.sh --username <username> --email <email> --password <password> --user-pool-id <pool-id> --client-id <client-id> [--region us-east-1] [--endpoint-url http://localhost:4566] [--env-file .env]
 The script signs up a user and confirms them so the Cognito PostConfirmation trigger (syncUserOnSignup) fires.
 Values can come from flags, a dotenv file, or env vars (COGNITO_USERNAME, COGNITO_EMAIL, COGNITO_PASSWORD, COGNITO_USER_POOL_ID, COGNITO_USER_POOL_CLIENT_ID, AWS_REGION, COGNITO_ENDPOINT, AWS_CLI).
+CLI selection:
+  - Defaults to aws.
+  - If --endpoint-url/COGNITO_ENDPOINT is set and AWS_CLI is not, it falls back to awslocal.
+  - You can force either via AWS_CLI (e.g., AWS_CLI=aws or AWS_CLI=awslocal).
 EOF
 }
 
@@ -17,7 +21,8 @@ CLIENT_ID=""
 REGION="${AWS_REGION:-us-east-1}"
 ENDPOINT_URL=""
 ENV_FILE=""
-AWS_CLI_BIN="${AWS_CLI:-awslocal}"
+AWS_CLI_BIN="${AWS_CLI:-}"
+STAGE="${STAGE:-}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -58,16 +63,39 @@ CLIENT_ID="${CLIENT_ID:-${COGNITO_USER_POOL_CLIENT_ID:-}}"
 REGION="${REGION:-${AWS_REGION:-us-east-1}}"
 ENDPOINT_URL="${ENDPOINT_URL:-${COGNITO_ENDPOINT:-}}"
 AWS_CLI_BIN="${AWS_CLI_BIN:-${AWS_CLI:-awslocal}}"
+STAGE="${STAGE:-${STAGE:-}}"
 
-if [[ -z "$USERNAME" || -z "$EMAIL" || -z "$PASSWORD" || -z "$USER_POOL_ID" || -z "$CLIENT_ID" ]]; then
-  echo "Missing required arguments." >&2
-  usage
-  exit 1
+# Default CLI: prefer aws for real AWS, awslocal when hitting a local endpoint (unless overridden)
+if [[ -z "$AWS_CLI_BIN" ]]; then
+  if [[ -n "$ENDPOINT_URL" || "$STAGE" == "local" ]]; then
+    AWS_CLI_BIN="awslocal"
+  else
+    AWS_CLI_BIN="aws"
+  fi
 fi
 
 AWS_ARGS=(--region "$REGION")
 if [[ -n "$ENDPOINT_URL" ]]; then
   AWS_ARGS+=(--endpoint-url "$ENDPOINT_URL")
+fi
+
+if [[ -z "$USERNAME" || -z "$EMAIL" || -z "$PASSWORD" || -z "$USER_POOL_ID" || (-z "$CLIENT_ID" && "$STAGE" != "local") ]]; then
+  echo "Missing required arguments." >&2
+  usage
+  exit 1
+fi
+
+# When running locally we can derive the client id if it wasn't provided.
+if [[ "$STAGE" == "local" && -z "$CLIENT_ID" ]]; then
+  echo "Attempting to discover Cognito app client for pool '$USER_POOL_ID'..."
+  CLIENT_ID=$("$AWS_CLI_BIN" cognito-idp list-user-pool-clients \
+    --user-pool-id "$USER_POOL_ID" \
+    --max-results 5 \
+    "${AWS_ARGS[@]}" | jq -r '.UserPoolClients[0].ClientId // empty')
+  if [[ -z "$CLIENT_ID" ]]; then
+    echo "Could not discover a Cognito app client for pool '$USER_POOL_ID'. Please pass --client-id or set COGNITO_USER_POOL_CLIENT_ID." >&2
+    exit 1
+  fi
 fi
 
 echo "Signing up Cognito user '$USERNAME' in client '$CLIENT_ID'..."
