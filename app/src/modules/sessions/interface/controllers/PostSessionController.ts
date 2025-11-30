@@ -23,7 +23,7 @@ export default class PostSessionController {
     this.logger.info('Decoded JWT claims', { claims });
     const userId = claims.sub;
     if (!userId) {
-      throw new Error('Missing subject in JWT');
+      throw new Error('Authentication failed: invalid or missing user identifier');
     }
     this.logger.info('Creating new session for user', { userId });
     const command = new CreateSessionCommand(
