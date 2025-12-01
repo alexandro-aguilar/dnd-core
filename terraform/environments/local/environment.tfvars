@@ -415,7 +415,7 @@ lambda_functions = {
     routes = []
   }
   # Sessions
-    postSession = {
+  postSession = {
     source_file   = "../.dist/postSessionHandler.js"
     handler       = "postSessionHandler.handler"
     runtime       = "nodejs22.x"
