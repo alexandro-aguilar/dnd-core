@@ -402,6 +402,34 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Sessions",
+      "item": [
+        {
+          "name": "Create Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"First delve into the Oniric Plane\",\n  \"status\": \"planned\",\n  \"notes\": \"Session 0 expectations and safety tools\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/sessions",
+              "host": ["{{base_url}}"],
+              "path": ["sessions"]
+            },
+            "description": "Creates a new session. Requires a valid dmId (user id) and an ISO-8601 scheduledAt."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

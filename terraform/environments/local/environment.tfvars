@@ -37,7 +37,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Classes
   getClasses = {
     source_file   = "../.dist/getClassesHandler.js"
     handler       = "getClassesHandler.handler"
@@ -69,7 +69,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Races
   getRaces = {
     source_file   = "../.dist/getRacesHandler.js"
     handler       = "getRacesHandler.handler"
@@ -101,7 +101,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Subraces
   getSubraces = {
     source_file   = "../.dist/getSubracesHandler.js"
     handler       = "getSubracesHandler.handler"
@@ -133,7 +133,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Subclasses
   getSubclasses = {
     source_file   = "../.dist/getSubclassesHandler.js"
     handler       = "getSubclassesHandler.handler"
@@ -165,7 +165,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Abilities
   getAbilities = {
     source_file   = "../.dist/getAbilitiesHandler.js"
     handler       = "getAbilitiesHandler.handler"
@@ -197,7 +197,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Skills
   getSkills = {
     source_file   = "../.dist/getSkillsHandler.js"
     handler       = "getSkillsHandler.handler"
@@ -229,7 +229,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Items
   getItems = {
     source_file   = "../.dist/getItemsHandler.js"
     handler       = "getItemsHandler.handler"
@@ -261,7 +261,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Spells
   getSpells = {
     source_file   = "../.dist/getSpellsHandler.js"
     handler       = "getSpellsHandler.handler"
@@ -293,7 +293,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Characters
   getCharacters = {
     source_file   = "../.dist/getCharactersHandler.js"
     handler       = "getCharactersHandler.handler"
@@ -325,7 +325,37 @@ lambda_functions = {
       }
     ]
   }
-
+  postCharacter = {
+    source_file   = "../.dist/postCharacterHandler.js"
+    handler       = "postCharacterHandler.handler"
+    runtime       = "nodejs22.x"
+    description   = "Creates a new character"
+    memory_size   = 1024
+    timeout       = 10
+    architectures = ["arm64"]
+    layers        = []
+    environment = {
+      NODE_ENV                = "local"
+      LOG_LEVEL               = "debug"
+      LOCALSTACK_HOSTNAME     = "localhost"
+      STAGE                   = "local"
+      OPENAI_API_KEY          = ""
+      POWERTOOLS_SERVICE_NAME = "dnd-core-postCharacter"
+      POWERTOOLS_LOG_LEVEL    = "INFO"
+      PROJECT_NAME            = "DnD"
+      DB_HOST                 = "postgres_dnd-core_db"
+      DB_PORT                 = "5432"
+      DB_USER                 = "postgres"
+      DB_PASSWORD             = "postgres"
+      DB_NAME                 = "dnd-core"
+    }
+    routes = [
+      {
+        method = "POST"
+        path   = "/characters"
+      }
+    ]
+  }
   getCharacterById = {
     source_file   = "../.dist/getCharacterByIdHandler.js"
     handler       = "getCharacterByIdHandler.handler"
@@ -357,7 +387,7 @@ lambda_functions = {
       }
     ]
   }
-
+  # Users
   syncUserOnSignup = {
     source_file   = "../.dist/syncUserOnSignupHandler.js"
     handler       = "syncUserOnSignupHandler.handler"
@@ -384,12 +414,12 @@ lambda_functions = {
     }
     routes = []
   }
-
-  postCharacter = {
-    source_file   = "../.dist/postCharacterHandler.js"
-    handler       = "postCharacterHandler.handler"
+  # Sessions
+    postSession = {
+    source_file   = "../.dist/postSessionHandler.js"
+    handler       = "postSessionHandler.handler"
     runtime       = "nodejs22.x"
-    description   = "Creates a new character"
+    description   = "Creates a new session"
     memory_size   = 1024
     timeout       = 10
     architectures = ["arm64"]
@@ -400,7 +430,7 @@ lambda_functions = {
       LOCALSTACK_HOSTNAME     = "localhost"
       STAGE                   = "local"
       OPENAI_API_KEY          = ""
-      POWERTOOLS_SERVICE_NAME = "dnd-core-postCharacter"
+      POWERTOOLS_SERVICE_NAME = "dnd-core-postSession"
       POWERTOOLS_LOG_LEVEL    = "INFO"
       PROJECT_NAME            = "DnD"
       DB_HOST                 = "postgres_dnd-core_db"
@@ -412,7 +442,7 @@ lambda_functions = {
     routes = [
       {
         method = "POST"
-        path   = "/characters"
+        path   = "/sessions"
       }
     ]
   }
