@@ -430,6 +430,34 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Quests",
+      "item": [
+        {
+          "name": "Create Quest",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"name\": \"Recover the Aether Shard\",\n  \"status\": \"not_started\",\n  \"summary\": \"Locate the shard before the rival cabal does\",\n  \"hook\": \"A mysterious benefactor offers a map fragment\",\n  \"reward\": \"500 gp and arcane favor\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/quests",
+              "host": ["{{base_url}}"],
+              "path": ["quests"]
+            },
+            "description": "Creates a new quest. Requires a valid sessionId and bearer token."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [

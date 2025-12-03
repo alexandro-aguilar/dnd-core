@@ -45,4 +45,23 @@ lambda_functions = {
       }
     ]
   }
+
+  postQuest = {
+    source_file = "../.dist/postQuestHandler.js"
+    handler     = "postQuestHandler.handler"
+    runtime     = "nodejs22.x"
+    description = "Creates a new quest"
+    memory_size = 1024
+    timeout     = 10
+    environment = {
+      NODE_ENV  = "local"
+      LOG_LEVEL = "debug"
+    }
+    routes = [
+      {
+        method = "POST"
+        path   = "/quests"
+      }
+    ]
+  }
 }
